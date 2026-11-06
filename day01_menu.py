@@ -1,37 +1,49 @@
+
 while True:
 
-    print("\n===== AI Learning Assistant =====")
+    print("\n===== STARTUP RECOGNITION GUIDE =====")
     print("1. About Project")
     print("2. Sample Questions")
-    print("3. Check Learning Level")
+    print("3. Business Structure Check")
     print("0. Exit")
 
     choice = input("Enter your choice: ")
 
     if choice == "1":
-        print("This project helps students learn AI.")
+
+        print("\nProduct: DPIIT Startup Recognition Guide")
+        print("Users: Student Founders")
+        print("Example: Agricultural Drone Startup")
 
     elif choice == "2":
-        print("1. What is AI?")
-        print("2. What is Machine Learning?")
-        print("3. What is Generative AI?")
+
+        print("\nSample Questions:")
+        print("1. What is DPIIT recognition?")
+        print("2. What are the tax benefits?")
+        print("3. What is IPR support?")
+        print("4. What funding schemes are available?")
+        print("5. What Maharashtra incentives are available?")
 
     elif choice == "3":
 
-        level = input("Enter your level: ")
+        plan = input(
+            "Do you plan to raise equity investment? (yes/no): "
+        )
 
-        if level == "beginner":
-            print("Start with Python and AI basics.")
+        if plan == "yes":
+            print("Private Limited Company may be suitable.")
 
-        elif level == "intermediate":
-            print("Start with Machine Learning.")
+        elif plan == "no":
+            print("LLP may be suitable for a flexible partnership.")
 
         else:
-            print("Invalid learning level.")
+            print("Please enter yes or no.")
 
     elif choice == "0":
-        print("Thank you!")
+
+        print("Thank you for using Startup Recognition Guide!")
         break
 
     else:
-        print("Invalid choice!")
+
+        print("Invalid choice. Try again.")
