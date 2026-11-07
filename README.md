@@ -62,3 +62,55 @@ Shrikar Bhorkade
 
 ## 12. Project Vision
 To make startup registration, government benefits, and funding information easier to understand and access through Artificial Intelligence.
+
+Day 01 – Project Introduction
+
+Created the StartupSetu project.
+
+Defined the problem statement and project objectives.
+
+Planned the basic project structure.
+
+Day 02 – Startup Data Collection
+
+Created sample startup-related records using Python.
+
+Stored records as a list of dictionaries.
+
+Added keyword-based search functionality.
+
+Implemented category-wise record counting.
+
+Completed Tasks
+
+Added a real government CSV dataset to data/raw/.
+
+Created app/ingest.py for CSV data ingestion.
+
+Implemented data cleaning and record conversion.
+
+Added exception handling for problematic rows.
+
+Converted cleaned CSV records into JSON.
+
+Saved processed data in data/records.json.
+
+Updated load_records() to read records from JSON.
+
+Integrated JSON data with the StartupSetu CLI.
+
+Technologies Used
+
+Python
+
+CSV
+
+JSON
+
+Exception Handling
+
+File Handling
+
+Project Progress
+
+StartupSetu now supports importing real-world data and converting it into a structured format for further processing and AI-powered startup guidance.
