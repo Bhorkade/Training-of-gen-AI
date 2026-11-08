@@ -8,7 +8,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # CSV input file
-CSV_FILE = BASE_DIR / "data" / "raw" / "gov-data-final.csv"
+CSV_FILE = BASE_DIR / "data" / "raw" / "startupsetu_master.csv"
 
 # JSON output file
 JSON_FILE = BASE_DIR / "data" / "records.json"
@@ -28,7 +28,9 @@ def get_value(row, possible_names):
 
     for key, value in row.items():
 
-        if key.lower().strip().replace(" ", "_") in possible_names:
+        normalized_key = key.lower().strip().replace(" ", "_")
+
+        if normalized_key in possible_names:
             if value:
                 return clean_value(value)
 
@@ -115,7 +117,7 @@ def clean_record(row, row_number):
         "category": category or "General",
         "description": description,
         "eligibility": eligibility,
-        "source": source or "gov-data-final.csv"
+        "source": source or "startupsetu_master.csv"
     }
 
 
@@ -152,6 +154,9 @@ def ingest_data():
             except (ValueError, TypeError, AttributeError) as error:
                 bad_rows += 1
                 print(f"Skipping row {row_number}: {error}")
+
+    # Create data folder if it does not exist
+    JSON_FILE.parent.mkdir(parents=True, exist_ok=True)
 
     # Save cleaned records as JSON
     with open(JSON_FILE, "w", encoding="utf-8") as file:

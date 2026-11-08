@@ -1,1 +1,162 @@
-[]
+[
+    {
+        "id": "1",
+        "title": "DPIIT Startup Recognition",
+        "category": "Recognition",
+        "description": "id: 1 | scheme_name: DPIIT Startup Recognition | category: Recognition | government_level: Central | state: All India | description: Government recognition for eligible startups under the Startup India initiative. | benefits: Access to specified Startup India benefits and scheme opportunities, subject to each benefit's rules. | eligibility: Must satisfy the current DPIIT definition of a startup, including entity, age, turnover and innovation criteria. | recognition_required: This is the recognition itself | business_stage: Early-stage; Growth | entity_type: Private Limited; LLP; Registered Partnership | funding_amount: Not a funding grant | application_process: Apply through the official Startup India portal and submit required entity and business details. | source_url: https://www.startupindia.gov.in/ | last_verified: Verify before use",
+        "eligibility": "Must satisfy the current DPIIT definition of a startup, including entity, age, turnover and innovation criteria.",
+        "source": "https://www.startupindia.gov.in/"
+    },
+    {
+        "id": "2",
+        "title": "Startup India Seed Fund Scheme (SISFS)",
+        "category": "Funding",
+        "description": "id: 2 | scheme_name: Startup India Seed Fund Scheme (SISFS) | category: Funding | government_level: Central | state: All India | description: Seed-stage support routed through selected incubators for proof of concept, prototype development, product trials, market entry and commercialisation. | benefits: Eligible startups may receive grant or debt/convertible support under scheme conditions. | eligibility: Scheme-specific conditions apply, including incorporation age, DPIIT recognition and Indian promoter shareholding requirements. | recognition_required: Yes | business_stage: Idea; Early-stage | entity_type: Eligible DPIIT-recognised startup | funding_amount: Scheme-defined; verify current limits | application_process: Check current scheme status and apply through an eligible incubator listed on the official portal. | source_url: https://seedfund.startupindia.gov.in/ | last_verified: Verify before use",
+        "eligibility": "Scheme-specific conditions apply, including incorporation age, DPIIT recognition and Indian promoter shareholding requirements.",
+        "source": "https://seedfund.startupindia.gov.in/"
+    },
+    {
+        "id": "3",
+        "title": "Fund of Funds for Startups (FFS)",
+        "category": "Investment",
+        "description": "id: 3 | scheme_name: Fund of Funds for Startups (FFS) | category: Investment | government_level: Central | state: All India | description: Government fund-of-funds managed through SIDBI that commits capital to eligible SEBI-registered AIFs. | benefits: AIFs supported by the fund may invest in startups; this is not a direct government grant to a startup. | eligibility: Startup must meet the investment criteria of an AIF participating in the ecosystem. | recognition_required: Not universally; check AIF criteria | business_stage: Early-stage; Growth | entity_type: Startup seeking equity investment | funding_amount: Investment decided by AIF | application_process: Identify participating AIFs and approach them directly with a pitch and due-diligence documents. | source_url: https://www.sidbi.in/ | last_verified: Verify before use",
+        "eligibility": "Startup must meet the investment criteria of an AIF participating in the ecosystem.",
+        "source": "https://www.sidbi.in/"
+    },
+    {
+        "id": "4",
+        "title": "Credit Guarantee Scheme for Startups (CGSS)",
+        "category": "Credit Support",
+        "description": "id: 4 | scheme_name: Credit Guarantee Scheme for Startups (CGSS) | category: Credit Support | government_level: Central | state: All India | description: Credit-guarantee framework intended to encourage eligible lenders to provide debt to eligible startups. | benefits: Guarantee cover to eligible lending institutions; it does not mean an automatic grant or loan approval. | eligibility: DPIIT-recognised startup and lender-level eligibility, exposure and guarantee conditions apply. | recognition_required: Yes | business_stage: Early-stage; Growth | entity_type: Eligible DPIIT-recognised startup | funding_amount: Loan amount and guarantee cover subject to current scheme rules | application_process: Approach a participating member institution and ask whether the proposed loan can be covered under CGSS. | source_url: https://www.startupindia.gov.in/ | last_verified: Verify before use",
+        "eligibility": "DPIIT-recognised startup and lender-level eligibility, exposure and guarantee conditions apply.",
+        "source": "https://www.startupindia.gov.in/"
+    },
+    {
+        "id": "5",
+        "title": "MAARG Mentorship Platform",
+        "category": "Mentorship",
+        "description": "id: 5 | scheme_name: MAARG Mentorship Platform | category: Mentorship | government_level: Central | state: All India | description: Startup India platform intended to connect startups with mentors across business functions and sectors. | benefits: Mentorship, guidance and ecosystem connections; not direct funding. | eligibility: Registration and participation conditions on the portal apply. | recognition_required: Check portal rules | business_stage: Idea; Early-stage; Growth | entity_type: Startup founders and mentors | funding_amount: Not applicable | application_process: Register or explore mentor options through the Startup India portal. | source_url: https://www.startupindia.gov.in/ | last_verified: Verify before use",
+        "eligibility": "Registration and participation conditions on the portal apply.",
+        "source": "https://www.startupindia.gov.in/"
+    },
+    {
+        "id": "6",
+        "title": "Startup India Investor Connect",
+        "category": "Investor Connect",
+        "description": "id: 6 | scheme_name: Startup India Investor Connect | category: Investor Connect | government_level: Central | state: All India | description: Platform intended to facilitate connections between startups and investors. | benefits: Potential investor discovery and fundraising connections; no guaranteed investment. | eligibility: Startup profile and platform onboarding requirements apply. | recognition_required: Check portal rules | business_stage: Early-stage; Growth | entity_type: Startup seeking investment | funding_amount: No guaranteed amount | application_process: Create or update the startup profile and follow the current platform onboarding process. | source_url: https://www.startupindia.gov.in/ | last_verified: Verify before use",
+        "eligibility": "Startup profile and platform onboarding requirements apply.",
+        "source": "https://www.startupindia.gov.in/"
+    },
+    {
+        "id": "7",
+        "title": "Startup India Intellectual Property Support",
+        "category": "IPR",
+        "description": "id: 7 | scheme_name: Startup India Intellectual Property Support | category: IPR | government_level: Central | state: All India | description: Facilitation support for eligible startups seeking patents, trademarks and designs. | benefits: Access to facilitators and applicable fee rebates or expedited processing under current rules. | eligibility: Eligibility and facilitator/fee conditions must be checked for the relevant IP application. | recognition_required: Generally yes for startup-specific benefits | business_stage: Idea; Early-stage; Growth | entity_type: Eligible recognised startup | funding_amount: Fee support; not cash funding | application_process: Use the Startup India IPR support information and follow the relevant IP office filing process. | source_url: https://www.startupindia.gov.in/ | last_verified: Verify before use",
+        "eligibility": "Eligibility and facilitator/fee conditions must be checked for the relevant IP application.",
+        "source": "https://www.startupindia.gov.in/"
+    },
+    {
+        "id": "8",
+        "title": "Startup India Self-Certification",
+        "category": "Compliance",
+        "description": "id: 8 | scheme_name: Startup India Self-Certification | category: Compliance | government_level: Central | state: All India | description: Eligible startups may self-certify compliance with specified labour and environmental laws under applicable rules. | benefits: Reduced inspection burden for covered laws, subject to conditions and exclusions. | eligibility: Only specified laws and eligible startups are covered; all other legal obligations continue. | recognition_required: Yes; check current conditions | business_stage: Early-stage; Growth | entity_type: Eligible recognised startup | funding_amount: Not applicable | application_process: Review the current Startup India self-certification guidance and complete required portal declarations. | source_url: https://www.startupindia.gov.in/ | last_verified: Verify before use",
+        "eligibility": "Only specified laws and eligible startups are covered; all other legal obligations continue.",
+        "source": "https://www.startupindia.gov.in/"
+    },
+    {
+        "id": "9",
+        "title": "Public Procurement Relaxations for Startups",
+        "category": "Market Access",
+        "description": "id: 9 | scheme_name: Public Procurement Relaxations for Startups | category: Market Access | government_level: Central | state: All India | description: Certain government procurement rules provide eligible startups relaxations from prior experience or turnover requirements. | benefits: Potential access to government tenders where the procuring authority permits the relaxation. | eligibility: Tender-specific conditions, quality and technical requirements continue to apply. | recognition_required: Often required; check tender | business_stage: Early-stage; Growth | entity_type: Eligible startup | funding_amount: Contract value varies by tender | application_process: Search GeM and department tender notices; verify the specific tender's startup provisions. | source_url: https://gem.gov.in/ | last_verified: Verify before use",
+        "eligibility": "Tender-specific conditions, quality and technical requirements continue to apply.",
+        "source": "https://gem.gov.in/"
+    },
+    {
+        "id": "10",
+        "title": "Section 80-IAC Income Tax Deduction",
+        "category": "Tax",
+        "description": "id: 10 | scheme_name: Section 80-IAC Income Tax Deduction | category: Tax | government_level: Central | state: All India | description: Tax deduction provision for qualifying eligible startups under the Income-tax law, subject to approval and statutory conditions. | benefits: Potential deduction of eligible profits for the permitted period if all conditions are met. | eligibility: Incorporation date, DPIIT recognition, approval and other statutory conditions apply; verify current law and deadlines. | recognition_required: Yes; plus prescribed approval | business_stage: Growth; Profitable startup | entity_type: Eligible company or LLP as prescribed by law | funding_amount: Tax deduction; not funding | application_process: Consult a chartered accountant and check the current Income Tax Department and Startup India requirements. | source_url: https://www.incometax.gov.in/ | last_verified: Verify before use",
+        "eligibility": "Incorporation date, DPIIT recognition, approval and other statutory conditions apply; verify current law and deadlines.",
+        "source": "https://www.incometax.gov.in/"
+    },
+    {
+        "id": "11",
+        "title": "Maharashtra Startup, Entrepreneurship and Innovation Policy 2025",
+        "category": "State Policy",
+        "description": "id: 11 | scheme_name: Maharashtra Startup, Entrepreneurship and Innovation Policy 2025 | category: State Policy | government_level: State | state: Maharashtra | description: State policy framework for strengthening entrepreneurship, innovation, startup support and ecosystem development. | benefits: May provide or enable state-level support; exact incentives depend on notified implementation rules and eligibility. | eligibility: Depends on the specific policy provision, notification and applicant profile. | recognition_required: Depends on incentive | business_stage: Idea; Early-stage; Growth | entity_type: Depends on specific programme | funding_amount: As notified | application_process: Read the policy and current government resolutions; contact the Maharashtra State Innovation Society for programme details. | source_url: https://msins.in/Resources | last_verified: Verify before use",
+        "eligibility": "Depends on the specific policy provision, notification and applicant profile.",
+        "source": "https://msins.in/Resources"
+    },
+    {
+        "id": "12",
+        "title": "Maharashtra Innovation and Technological Development Fund (MITDF)",
+        "category": "State Investment",
+        "description": "id: 12 | scheme_name: Maharashtra Innovation and Technological Development Fund (MITDF) | category: State Investment | government_level: State | state: Maharashtra | description: State fund intended to support innovation and technology development through investment mechanisms. | benefits: Potential equity or equity-linked investment, subject to fund availability, appraisal and terms. | eligibility: Maharashtra connection, innovation, scalability and fund-specific due diligence requirements apply. | recognition_required: Check fund criteria | business_stage: Early-stage; Growth | entity_type: Eligible startup or MSME | funding_amount: Case-by-case; verify current fund terms | application_process: Check the official Maharashtra scheme page and contact the implementing department for current application details. | source_url: https://msme.maharashtra.gov.in/scheme/maharashtra-innovation-and-technological-development-fund-mitdf/ | last_verified: Verify before use",
+        "eligibility": "Maharashtra connection, innovation, scalability and fund-specific due diligence requirements apply.",
+        "source": "https://msme.maharashtra.gov.in/scheme/maharashtra-innovation-and-technological-development-fund-mitdf/"
+    },
+    {
+        "id": "13",
+        "title": "Maharashtra State Innovation Society (MSInS)",
+        "category": "Startup Support",
+        "description": "id: 13 | scheme_name: Maharashtra State Innovation Society (MSInS) | category: Startup Support | government_level: State | state: Maharashtra | description: State nodal organisation supporting innovation, entrepreneurship and startup ecosystem programmes in Maharashtra. | benefits: Information about state programmes, ecosystem initiatives, events and support channels. | eligibility: Programme-specific eligibility applies. | recognition_required: Depends on programme | business_stage: Idea; Early-stage; Growth | entity_type: Depends on programme | funding_amount: Depends on programme | application_process: Explore current programmes, notices and contact information on the official MSInS website. | source_url: https://msins.in/ | last_verified: Verify before use",
+        "eligibility": "Programme-specific eligibility applies.",
+        "source": "https://msins.in/"
+    },
+    {
+        "id": "14",
+        "title": "Maharashtra Startup Ecosystem / Incubator Support",
+        "category": "Incubation",
+        "description": "id: 14 | scheme_name: Maharashtra Startup Ecosystem / Incubator Support | category: Incubation | government_level: State | state: Maharashtra | description: Incubators and ecosystem partners provide mentoring, workspace, business support and access to networks. | benefits: Incubation services and possible introductions to grants, investors or technical facilities; support varies by incubator. | eligibility: Each incubator has its own sector, stage, location and selection criteria. | recognition_required: Not always | business_stage: Idea; Early-stage | entity_type: Depends on incubator | funding_amount: Varies by incubator | application_process: Find an appropriate incubator through MSInS or recognised institutional incubator directories and apply to its programme. | source_url: https://msins.in/ | last_verified: Verify before use",
+        "eligibility": "Each incubator has its own sector, stage, location and selection criteria.",
+        "source": "https://msins.in/"
+    },
+    {
+        "id": "15",
+        "title": "Maharashtra Startup Policy Incentives – Programme-specific",
+        "category": "State Incentive",
+        "description": "id: 15 | scheme_name: Maharashtra Startup Policy Incentives – Programme-specific | category: State Incentive | government_level: State | state: Maharashtra | description: A dataset entry to track individual incentives announced under Maharashtra startup policy or government resolutions. | benefits: Potential reimbursements, grants or other support only where a current notification explicitly provides them. | eligibility: Must be assessed against the exact government resolution, applicant category, location and application window. | recognition_required: Depends on incentive | business_stage: Idea; Early-stage; Growth | entity_type: As specified in notification | funding_amount: As specified in notification | application_process: Do not apply using this generic entry; locate the specific current government resolution and implementing agency. | source_url: https://gr.maharashtra.gov.in/ | last_verified: Verify before use",
+        "eligibility": "Must be assessed against the exact government resolution, applicant category, location and application window.",
+        "source": "https://gr.maharashtra.gov.in/"
+    },
+    {
+        "id": "16",
+        "title": "Private Limited Company",
+        "category": "Legal Structure",
+        "description": "id: 16 | scheme_name: Private Limited Company | category: Legal Structure | government_level: Central | state: All India | description: A company incorporated under the Companies Act with separate legal identity and limited liability for shareholders. | benefits: Often suitable for startups planning equity investment, ESOPs and scalable ownership structures. | eligibility: At least the statutory minimum number of members and directors; comply with current company law requirements. | recognition_required: DPIIT recognition is separate | business_stage: Idea; Early-stage; Growth | entity_type: Private Limited Company | funding_amount: Not applicable | application_process: Incorporate through the Ministry of Corporate Affairs portal with professional advice where needed. | source_url: https://www.mca.gov.in/ | last_verified: Verify before use",
+        "eligibility": "At least the statutory minimum number of members and directors; comply with current company law requirements.",
+        "source": "https://www.mca.gov.in/"
+    },
+    {
+        "id": "17",
+        "title": "Limited Liability Partnership (LLP)",
+        "category": "Legal Structure",
+        "description": "id: 17 | scheme_name: Limited Liability Partnership (LLP) | category: Legal Structure | government_level: Central | state: All India | description: A partnership structure with separate legal identity and limited liability, governed by the LLP Act. | benefits: Flexible internal management and limited liability; equity fundraising structure differs from a company. | eligibility: At least the statutory minimum number of partners and designated partners; comply with LLP law. | recognition_required: DPIIT recognition is separate | business_stage: Idea; Early-stage; Services business | entity_type: LLP | funding_amount: Not applicable | application_process: Register through the Ministry of Corporate Affairs portal and review tax and compliance implications. | source_url: https://www.mca.gov.in/ | last_verified: Verify before use",
+        "eligibility": "At least the statutory minimum number of partners and designated partners; comply with LLP law.",
+        "source": "https://www.mca.gov.in/"
+    },
+    {
+        "id": "18",
+        "title": "Registered Partnership Firm",
+        "category": "Legal Structure",
+        "description": "id: 18 | scheme_name: Registered Partnership Firm | category: Legal Structure | government_level: Central | state: All India | description: A partnership business registered under applicable partnership law; partners share responsibilities and liabilities. | benefits: Simple ownership arrangement, but partners may have personal liability and fundraising limitations. | eligibility: Two or more partners and a partnership deed; registration and state requirements should be checked. | recognition_required: DPIIT recognition eligibility differs; verify current rules | business_stage: Idea; Small business | entity_type: Registered Partnership | funding_amount: Not applicable | application_process: Prepare a partnership deed and complete registration and tax formalities with professional guidance. | source_url: https://www.startupindia.gov.in/ | last_verified: Verify before use",
+        "eligibility": "Two or more partners and a partnership deed; registration and state requirements should be checked.",
+        "source": "https://www.startupindia.gov.in/"
+    },
+    {
+        "id": "19",
+        "title": "Startup India Learning Program",
+        "category": "Learning",
+        "description": "id: 19 | scheme_name: Startup India Learning Program | category: Learning | government_level: Central | state: All India | description: Online learning resource covering startup fundamentals such as business planning, finance, legal basics and growth. | benefits: Entrepreneurship learning and foundational guidance; not direct funding. | eligibility: Check current course availability and enrolment requirements. | recognition_required: No general recognition requirement for learning | business_stage: Idea; Early-stage | entity_type: Founders and aspiring entrepreneurs | funding_amount: Not applicable | application_process: Visit the Startup India portal and check available learning resources. | source_url: https://www.startupindia.gov.in/ | last_verified: Verify before use",
+        "eligibility": "Check current course availability and enrolment requirements.",
+        "source": "https://www.startupindia.gov.in/"
+    },
+    {
+        "id": "20",
+        "title": "GeM Startup Runway",
+        "category": "Market Access",
+        "description": "id: 20 | scheme_name: GeM Startup Runway | category: Market Access | government_level: Central | state: All India | description: GeM initiative intended to provide startups a route to showcase innovative products and services to government buyers. | benefits: Potential visibility and government market access; no guarantee of orders or contracts. | eligibility: Seller registration, product/service category and procurement-specific requirements apply. | recognition_required: Check current programme rules | business_stage: Early-stage; Growth | entity_type: Eligible startup seller | funding_amount: Order value varies | application_process: Register as a seller on GeM and review current Startup Runway and bid requirements. | source_url: https://gem.gov.in/ | last_verified: Verify before use",
+        "eligibility": "Seller registration, product/service category and procurement-specific requirements apply.",
+        "source": "https://gem.gov.in/"
+    }
+]
