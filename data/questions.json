@@ -1,10 +1,52 @@
 [
     {
         "id": 1,
-        "question": "string"
+        "question": "What is DPIIT Startup Recognition?",
+        "answerable_from_dataset": true
     },
     {
         "id": 2,
-        "question": "string"
+        "question": "Can a Private Limited Company apply for DPIIT recognition?",
+        "answerable_from_dataset": true
+    },
+    {
+        "id": 3,
+        "question": "Can an LLP apply for DPIIT recognition?",
+        "answerable_from_dataset": true
+    },
+    {
+        "id": 4,
+        "question": "What is the Startup India Seed Fund Scheme?",
+        "answerable_from_dataset": true
+    },
+    {
+        "id": 5,
+        "question": "What is the Fund of Funds for Startups?",
+        "answerable_from_dataset": true
+    },
+    {
+        "id": 6,
+        "question": "What is the Credit Guarantee Scheme for Startups?",
+        "answerable_from_dataset": true
+    },
+    {
+        "id": 7,
+        "question": "What intellectual property benefits are available to eligible startups?",
+        "answerable_from_dataset": true
+    },
+    {
+        "id": 8,
+        "question": "Where can Maharashtra startups find information about state startup support?",
+        "answerable_from_dataset": true
+    },
+    {
+        "id": 9,
+        "question": "What is the difference between a Private Limited Company and an LLP?",
+        "answerable_from_dataset": true
+    },
+    {
+        "id": 10,
+        "question": "Exactly how much grant money will my agri-drone startup receive this year?",
+        "answerable_from_dataset": false
     }
 ]
