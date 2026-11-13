@@ -48,5 +48,21 @@
         "id": 10,
         "question": "Exactly how much grant money will my agri-drone startup receive this year?",
         "answerable_from_dataset": false
+    },
+    {
+        "id": 11,
+        "question": "string"
+    },
+    {
+        "id": 12,
+        "question": "what is this"
+    },
+    {
+        "id": 13,
+        "question": "what is this and who is apply for that startup"
+    },
+    {
+        "id": 14,
+        "question": "What is DPIIT Startup Recognition?"
     }
 ]

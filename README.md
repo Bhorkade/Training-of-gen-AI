@@ -114,3 +114,48 @@ File Handling
 Project Progress
 
 StartupSetu now supports importing real-world data and converting it into a structured format for further processing and AI-powered startup guidance.
+# StartupSetu – Daily Progress
+
+## Day 04 – FastAPI Development
+- Created a FastAPI application.
+- Added APIs for health check and startup records.
+- Implemented search functionality.
+- Added endpoints to retrieve startup information.
+
+## Day 05 – Smart Search
+- Implemented smart search using TF-IDF.
+- Used cosine similarity to find relevant records.
+- Tested search with 10 sample questions.
+- Improved the process of finding relevant startup information.
+
+## Day 06 – Gemini AI Integration
+- Created an LLM provider wrapper using Gemini API.
+- Integrated Gemini with FastAPI.
+- Added the `/chat` POST endpoint.
+- Created system and task prompts.
+- Added structured JSON responses.
+- Compared two prompt versions using 10 questions.
+
+**Note:** API keys are stored in `.env` and are not committed to GitHub.# StartupSetu – Daily Progress
+
+## Day 04 – FastAPI Development
+- Created a FastAPI application.
+- Added APIs for health check and startup records.
+- Implemented search functionality.
+- Added endpoints to retrieve startup information.
+
+## Day 05 – Smart Search
+- Implemented smart search using TF-IDF.
+- Used cosine similarity to find relevant records.
+- Tested search with 10 sample questions.
+- Improved the process of finding relevant startup information.
+
+## Day 06 – Gemini AI Integration
+- Created an LLM provider wrapper using Gemini API.
+- Integrated Gemini with FastAPI.
+- Added the `/chat` POST endpoint.
+- Created system and task prompts.
+- Added structured JSON responses.
+- Compared two prompt versions using 10 questions.
+
+**Note:** API keys are stored in `.env` and are not committed to GitHub.

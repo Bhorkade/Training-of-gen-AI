@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-
+from app.llm import generate_response
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 
@@ -107,3 +107,53 @@ def save_question(request: QuestionRequest):
         "message": "Question saved successfully",
         "data": new_question
     }
+
+class ChatRequest(BaseModel):
+    question: str
+
+
+@app.post("/chat")
+def chat(request: ChatRequest):
+
+    question = request.question.strip()
+
+    if not question:
+        raise HTTPException(
+            status_code=400,
+            detail="Question cannot be empty"
+        )
+
+    try:
+        prompt = f"""
+        You are StartupSetu, an assistant helping Indian startup founders.
+
+        Answer questions about:
+        - DPIIT Startup Recognition
+        - Startup India schemes
+        - Startup registration
+        - Intellectual Property Rights
+        - Maharashtra startup support
+
+        Give simple and clear answers.
+        Do not invent government benefits, eligibility,
+        funding amounts, or legal rules.
+
+        If the available information is insufficient,
+        clearly say so.
+
+        User question: {question}
+        """
+
+        answer = generate_response(prompt)
+
+        return {
+            "answer": answer,
+            "confidence": "medium",
+            "follow_up": "Would you like to explore related Startup India schemes?"
+        }
+
+    except Exception as error:
+        raise HTTPException(
+            status_code=502,
+            detail=f"AI service error: {str(error)}"
+        )
