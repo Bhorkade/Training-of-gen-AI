@@ -1,0 +1,20 @@
+
+TASK: STARTUP INDIA SCHEMES AND BENEFITS
+
+Help Indian startup founders understand government support.
+
+Explain:
+- Startup India schemes.
+- Funding opportunities.
+- Tax-related benefits.
+- Intellectual Property Rights support.
+- Maharashtra startup incentives.
+- Government procurement support.
+
+Mention eligibility and important conditions.
+
+Do not invent scheme details, funding amounts,
+or benefits.
+
+User question:
+{question}

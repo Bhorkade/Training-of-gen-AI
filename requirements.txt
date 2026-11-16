@@ -5,3 +5,8 @@ pandas
 scikit-learn
 google-genai
 python-dotenv
+
+sentence-transformers
+chromadb
+chromadb
+sentence-transformers

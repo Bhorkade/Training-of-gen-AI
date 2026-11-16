@@ -128,34 +128,1515 @@ StartupSetu now supports importing real-world data and converting it into a stru
 - Tested search with 10 sample questions.
 - Improved the process of finding relevant startup information.
 
-## Day 06 – Gemini AI Integration
-- Created an LLM provider wrapper using Gemini API.
-- Integrated Gemini with FastAPI.
-- Added the `/chat` POST endpoint.
-- Created system and task prompts.
-- Added structured JSON responses.
-- Compared two prompt versions using 10 questions.
+## Day 06 – Semantic Search with ChromaDB
 
-**Note:** API keys are stored in `.env` and are not committed to GitHub.# StartupSetu – Daily Progress
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
 
-## Day 04 – FastAPI Development
-- Created a FastAPI application.
-- Added APIs for health check and startup records.
-- Implemented search functionality.
-- Added endpoints to retrieve startup information.
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
 
-## Day 05 – Smart Search
-- Implemented smart search using TF-IDF.
-- Used cosine similarity to find relevant records.
-- Tested search with 10 sample questions.
-- Improved the process of finding relevant startup information.
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
 
-## Day 06 – Gemini AI Integration
-- Created an LLM provider wrapper using Gemini API.
-- Integrated Gemini with FastAPI.
-- Added the `/chat` POST endpoint.
-- Created system and task prompts.
-- Added structured JSON responses.
-- Compared two prompt versions using 10 questions.
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
 
-**Note:** API keys are stored in `.env` and are not committed to GitHub.
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.tu – Daily Progress
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.
+## Day 06 – Semantic Search with ChromaDB
+
+### Objective
+Implement semantic search to retrieve relevant StartupSetu records based on the meaning of a user's query.
+
+### Tasks Completed
+- Implemented document chunking using `app/chunking.py`.
+- Split startup records into smaller chunks.
+- Added metadata such as record ID, title, category, and chunk index.
+- Used Sentence Transformers (`all-MiniLM-L6-v2`) to generate text embeddings.
+- Stored document embeddings in a persistent ChromaDB vector database.
+- Implemented semantic similarity search using cosine distance.
+- Created `app/vectorstore.py` to manage indexing and searching.
+
+### Technologies Used
+- Python
+- Sentence Transformers
+- ChromaDB
+- Vector Embeddings
+- Semantic Search
+
+### Outcome
+Successfully implemented semantic search to retrieve relevant startup-related information based on the meaning of user queries.
+
+---
+
+## Day 07 – Semantic Search API Integration
+
+### Objective
+Integrate semantic search into the FastAPI application and make it accessible through an API endpoint.
+
+### Tasks Completed
+- Integrated the semantic search function into `app/main.py`.
+- Created a new GET endpoint: `/search/semantic`.
+- Added query parameter `q` to accept user questions.
+- Added `top_k` parameter to control the number of search results.
+- Tested the API using FastAPI Swagger documentation.
+- Verified successful API responses with HTTP 200 OK.
+- Updated project dependencies and prepared the code for GitHub.
+
+### Technologies Used
+- Python
+- FastAPI
+- ChromaDB
+- Sentence Transformers
+- REST API
+- Swagger UI
+
+### API Endpoint
+
+**GET** `/search/semantic?q=What is DPIIT Startup Recognition?&top_k=3`
+
+### Outcome
+Successfully integrated semantic search with FastAPI.

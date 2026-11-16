@@ -1,0 +1,19 @@
+
+TASK: DPIIT STARTUP RECOGNITION
+
+Help the user understand DPIIT Startup Recognition.
+
+Explain:
+- What DPIIT recognition means.
+- Who is eligible.
+- Basic application requirements.
+- Required documents.
+- Application process.
+- Benefits of recognition.
+
+Use simple language and step-by-step explanations.
+
+Never guarantee approval or invent government rules.
+
+User question:
+{question}
