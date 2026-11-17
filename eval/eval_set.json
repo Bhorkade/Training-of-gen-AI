@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1,
+    "question": "What is DPIIT Startup Recognition?",
+    "category": "Recognition",
+    "answerable": true,
+    "should_refuse": false,
+    "expected_citations": ["DPIIT Startup Recognition"],
+    "expected_keywords": ["DPIIT", "recognition", "Startup India"]
+  },
+  {
+    "id": 2,
+    "question": "Can a Private Limited Company apply for DPIIT recognition?",
+    "category": "Eligibility",
+    "answerable": true,
+    "should_refuse": false,
+    "expected_citations": ["DPIIT Startup Recognition", "Private Limited Company"],
+    "expected_keywords": ["Private Limited", "eligible", "recognition"]
+  },
+  {
+    "id": 3,
+    "question": "Can an LLP apply for DPIIT recognition?",
+    "category": "Eligibility",
+    "answerable": true,
+    "should_refuse": false,
+    "expected_citations": ["DPIIT Startup Recognition", "Limited Liability Partnership (LLP)"],
+    "expected_keywords": ["LLP", "eligible", "recognition"]
+  },
+  {
+    "id": 4,
+    "question": "What is the Startup India Seed Fund Scheme?",
+    "category": "Funding",
+    "answerable": true,
+    "should_refuse": false,
+    "expected_citations": ["Startup India Seed Fund Scheme (SISFS)"],
+    "expected_keywords": ["Seed Fund", "SISFS", "incubator", "prototype"]
+  },
+  {
+    "id": 5,
+    "question": "What is the Fund of Funds for Startups?",
+    "category": "Funding",
+    "answerable": true,
+    "should_refuse": false,
+    "expected_citations": ["Fund of Funds for Startups (FFS)"],
+    "expected_keywords": ["Fund of Funds", "SIDBI", "AIF"]
+  },
+  {
+    "id": 6,
+    "question": "What is the Credit Guarantee Scheme for Startups?",
+    "category": "Credit",
+    "answerable": true,
+    "should_refuse": false,
+    "expected_citations": ["Credit Guarantee Scheme for Startups (CGSS)"],
+    "expected_keywords": ["Credit Guarantee", "CGSS", "loans", "collateral"]
+  },
+  {
+    "id": 7,
+    "question": "What intellectual property benefits are available to eligible startups?",
+    "category": "IPR",
+    "answerable": true,
+    "should_refuse": false,
+    "expected_citations": ["Startup India Intellectual Property Support"],
+    "expected_keywords": ["Intellectual Property", "patent", "rebate", "facilitator"]
+  },
+  {
+    "id": 8,
+    "question": "Where can Maharashtra startups find information about state startup support?",
+    "category": "State Policy",
+    "answerable": true,
+    "should_refuse": false,
+    "expected_citations": ["Maharashtra State Innovation Society (MSInS)"],
+    "expected_keywords": ["Maharashtra", "MSInS", "innovation"]
+  },
+  {
+    "id": 9,
+    "question": "What is the difference between a Private Limited Company and an LLP?",
+    "category": "Entity",
+    "answerable": true,
+    "should_refuse": false,
+    "expected_citations": ["Private Limited Company", "Limited Liability Partnership (LLP)"],
+    "expected_keywords": ["Private Limited", "LLP", "directors", "partners"]
+  },
+  {
+    "id": 10,
+    "question": "Exactly how much grant money will my agri-drone startup receive this year?",
+    "category": "Out of Scope",
+    "answerable": false,
+    "should_refuse": true,
+    "expected_citations": [],
+    "expected_keywords": ["refuse", "insufficient", "cannot find"]
+  },
+  {
+    "id": 11,
+    "question": "What is the income tax exemption under Section 80-IAC for startups?",
+    "category": "Taxation",
+    "answerable": true,
+    "should_refuse": false,
+    "expected_citations": ["DPIIT Startup Recognition"],
+    "expected_keywords": ["80-IAC", "tax exemption", "3 years"]
+  },
+  {
+    "id": 12,
+    "question": "What support does Maharashtra State Innovation Society provide?",
+    "category": "State Policy",
+    "answerable": true,
+    "should_refuse": false,
+    "expected_citations": ["Maharashtra State Innovation Society (MSInS)"],
+    "expected_keywords": ["Maharashtra", "MSInS", "incubator", "grants"]
+  },
+  {
+    "id": 13,
+    "question": "How long is a company eligible to be recognized as a startup under DPIIT?",
+    "category": "Eligibility",
+    "answerable": true,
+    "should_refuse": false,
+    "expected_citations": ["DPIIT Startup Recognition"],
+    "expected_keywords": ["10 years", "incorporation"]
+  },
+  {
+    "id": 14,
+    "question": "What are the lunar exploration subsidies offered by NASA to Indian startups?",
+    "category": "Out of Scope",
+    "answerable": false,
+    "should_refuse": true,
+    "expected_citations": [],
+    "expected_keywords": ["refuse", "insufficient", "cannot find"]
+  },
+  {
+    "id": 15,
+    "question": "Will the government give 5 crore cash unconditionally to any college student with an idea?",
+    "category": "Out of Scope",
+    "answerable": false,
+    "should_refuse": true,
+    "expected_citations": [],
+    "expected_keywords": ["refuse", "insufficient", "cannot find"]
+  }
+]

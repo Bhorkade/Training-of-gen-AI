@@ -1,6 +1,6 @@
-
 import json
 from pathlib import Path
+from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
@@ -9,6 +9,7 @@ from app.llm import generate_response
 from app.records import load_records, get_by_id
 from app.smart_search import smart_search
 from app.vectorstore import semantic_search as vector_semantic_search
+from app.rag import rag_answer
 
 # --------------------------------------------------
 # APPLICATION CONFIGURATION
@@ -30,6 +31,11 @@ class QuestionRequest(BaseModel):
 
 class ChatRequest(BaseModel):
     question: str
+
+class AskRequest(BaseModel):
+    question: Optional[str] = None
+    query: Optional[str] = None
+    top_k: int = 3
 
 # --------------------------------------------------
 # PROMPT LOADER
@@ -330,4 +336,33 @@ Instructions:
         raise HTTPException(
             status_code=502,
             detail=f"AI service error: {str(error)}"
+        )
+
+# --------------------------------------------------
+# RAG ASK ENDPOINT
+# POST /ask
+# --------------------------------------------------
+
+@app.post("/ask")
+def ask(request: AskRequest):
+
+    q = (request.question or request.query or "").strip()
+
+    if not q:
+        raise HTTPException(
+            status_code=400,
+            detail="Question cannot be empty"
+        )
+
+    try:
+        response = rag_answer(
+            question=q,
+            top_k=request.top_k
+        )
+        return response
+
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"RAG processing error: {str(error)}"
         )
