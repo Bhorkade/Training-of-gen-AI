@@ -1,4 +1,3 @@
-
 def chunk_text(text, chunk_size=120, overlap=20):
     """
     Split text into word-based chunks.
@@ -25,6 +24,7 @@ def record_to_text(record):
     """
     fields = [
         "title",
+        "category",
         "description",
         "eligibility",
         "benefits",
@@ -39,94 +39,61 @@ def record_to_text(record):
         value = record.get(field)
 
         if value:
-            parts.append(f"{field}: {value}")
+            parts.append(f"{field.replace('_', ' ').title()}: {value}")
 
-    return "\n".join(parts)
+    return "\n\n".join(parts)
 
-
-def chunk_records(records):
-    """
-    Convert all records into chunks with metadata.
-    """
-    all_chunks = []
-
-    for record in records:
-        text = record_to_text(record)
-        chunks = chunk_text(text)
-
-        for index, chunk in enumerate(chunks):
-            all_chunks.append({
-                "id": f"{record['id']}-chunk-{index}",
-                "text": chunk,
-                "metadata": {
-                    "record_id": str(record["id"]),
-                    "title": str(record.get("title", "")),
-                    "category": str(record.get("category", "")),
-                    "source": str(record.get("source", "")),
-                    "government_level": str(
-                        record.get("government_level", "")
-                    ),
-                    "chunk_index": index,
-                }
-            })
 
 def chunk_records(records, chunk_size=500, overlap=100):
-
+    """
+    Convert all records into chunks with metadata.
+    Ensures 'source', 'page', and 'title' are kept on every chunk.
+    """
     chunks = []
 
     for record in records:
-
-        # Combine important record fields
-        text = f"""
-Title: {record.get('title', '')}
-
-Category: {record.get('category', '')}
-
-Description: {record.get('description', '')}
-
-Eligibility: {record.get('eligibility', '')}
-
-Benefits: {record.get('benefits', '')}
-
-Application Process: {record.get('application_process', '')}
-"""
-
+        text = record_to_text(record)
         text = text.strip()
 
         if not text:
             continue
+
+        record_id = str(record.get("id", "unknown"))
+        title = str(record.get("title", ""))
+        source = str(record.get("source", ""))
+        category = str(record.get("category", ""))
+        government_level = str(record.get("government_level", ""))
+        page = int(record.get("page", 1))
 
         # Split text into smaller chunks
         start = 0
         chunk_index = 0
 
         while start < len(text):
-
             end = start + chunk_size
+            chunk_content = text[start:end].strip()
 
-            chunk_text = text[start:end].strip()
-
-            if chunk_text:
-
-                chunks.append({
-                    "id": f"{record.get('id', 'unknown')}_{chunk_index}",
-
-                    "text": chunk_text,
-
+            if chunk_content:
+                chunk_id = f"{record_id}_{chunk_index}"
+                chunk_item = {
+                    "id": chunk_id,
+                    "text": chunk_content,
+                    "title": title,
+                    "source": source,
+                    "page": page,
                     "metadata": {
-                        "record_id": str(record.get("id", "")),
-                        "title": str(record.get("title", "")),
-                        "category": str(record.get("category", "")),
-                        "source": str(record.get("source", "")),
-                        "chunk_index": chunk_index
-                    }
-                })
-
+                        "record_id": record_id,
+                        "title": title,
+                        "source": source,
+                        "page": page,
+                        "category": category,
+                        "government_level": government_level,
+                        "chunk_index": chunk_index,
+                    },
+                }
+                chunks.append(chunk_item)
                 chunk_index += 1
 
-            # Move forward with overlap
             start += chunk_size - overlap
 
     return chunks
-
-    return all_chunks
