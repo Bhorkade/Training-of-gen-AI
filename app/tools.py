@@ -234,3 +234,12 @@ def submit_dpiit_application(
         "message": f"Application {application_id} for '{startup_name}' successfully submitted.",
         "application": submission_record
     }
+
+
+AVAILABLE_TOOLS = {
+    "check_dpiit_eligibility": check_dpiit_eligibility,
+    "get_scheme_details": get_scheme_details,
+    "query_rag": query_rag,
+    "submit_dpiit_application": submit_dpiit_application
+}
+

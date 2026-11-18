@@ -10,6 +10,8 @@ from app.records import load_records, get_by_id
 from app.smart_search import smart_search
 from app.vectorstore import semantic_search as vector_semantic_search
 from app.rag import rag_answer
+from app.graph import run_graph_agent
+
 
 # --------------------------------------------------
 # APPLICATION CONFIGURATION
@@ -36,6 +38,13 @@ class AskRequest(BaseModel):
     question: Optional[str] = None
     query: Optional[str] = None
     top_k: int = 3
+
+class AgentRequest(BaseModel):
+    query: Optional[str] = None
+    message: Optional[str] = None
+    thread_id: Optional[str] = None
+    approved: Optional[bool] = None
+
 
 # --------------------------------------------------
 # PROMPT LOADER
@@ -366,3 +375,33 @@ def ask(request: AskRequest):
             status_code=500,
             detail=f"RAG processing error: {str(error)}"
         )
+
+# --------------------------------------------------
+# LANGGRAPH AGENT ENDPOINT
+# POST /agent
+# --------------------------------------------------
+
+@app.post("/agent")
+def agent_endpoint(request: AgentRequest):
+    user_query = (request.query or request.message or "").strip()
+
+    if not user_query and request.approved is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Query or approval decision must be provided"
+        )
+
+    try:
+        response = run_graph_agent(
+            query=user_query,
+            thread_id=request.thread_id,
+            approved=request.approved
+        )
+        return response
+
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Agent execution error: {str(error)}"
+        )
+
