@@ -6,14 +6,14 @@ and domain-specific startup tools (DPIIT eligibility checker, schemes lookup, ap
 
 import json
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from app.llm import generate_response
 from app.tools import (
     check_dpiit_eligibility,
     get_scheme_details,
     query_rag,
-    submit_dpiit_application
+    submit_dpiit_application,
 )
 
 AVAILABLE_TOOLS = {
@@ -48,7 +48,7 @@ User Query: {query}
 """
 
 
-def _parse_llm_action(text: str) -> Dict[str, Any]:
+def _parse_llm_action(text: str) -> dict[str, Any]:
     """Parse Action and Action Input from LLM output."""
     action_match = re.search(r"Action:\s*([a-zA-Z0-9_]+)", text)
     action = action_match.group(1).strip() if action_match else "none"
@@ -75,7 +75,7 @@ def _parse_llm_action(text: str) -> Dict[str, Any]:
     }
 
 
-def _heuristic_decision(query: str) -> Dict[str, Any]:
+def _heuristic_decision(query: str) -> dict[str, Any]:
     """
     Intelligent fallback decision engine when LLM is unavailable, offline,
     or during automated mock evaluations.
@@ -153,7 +153,7 @@ def _heuristic_decision(query: str) -> Dict[str, Any]:
     }
 
 
-def run_agent_loop(query: str, max_iterations: int = 3) -> Dict[str, Any]:
+def run_agent_loop(query: str, max_iterations: int = 3) -> dict[str, Any]:
     """
     Hand-written ReAct Agent Loop:
     1. Evaluates query and decides tool or direct answer.
@@ -161,9 +161,9 @@ def run_agent_loop(query: str, max_iterations: int = 3) -> Dict[str, Any]:
     3. Analyzes observation and produces final verified answer with citations.
     """
     cleaned_query = query.strip()
-    steps: List[Dict[str, Any]] = []
-    citations: List[Dict[str, Any]] = []
-    tool_calls: List[str] = []
+    steps: list[dict[str, Any]] = []
+    citations: list[dict[str, Any]] = []
+    tool_calls: list[str] = []
 
     # Attempt LLM reasoning first
     action = None

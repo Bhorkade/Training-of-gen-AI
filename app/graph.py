@@ -7,7 +7,7 @@ Constructs a stateful agent graph powered by LangGraph, featuring:
 """
 
 import uuid
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Any, TypedDict
 
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
@@ -19,22 +19,22 @@ from app.tools import (
     check_dpiit_eligibility,
     get_scheme_details,
     query_rag,
-    submit_dpiit_application
+    submit_dpiit_application,
 )
 
 
 class AgentState(TypedDict):
     query: str
-    messages: List[Dict[str, str]]
+    messages: list[dict[str, str]]
     thread_id: str
-    action: Optional[str]
-    action_input: Dict[str, Any]
-    observation: Optional[Any]
+    action: str | None
+    action_input: dict[str, Any]
+    observation: Any | None
     answer: str
-    citations: List[Dict[str, Any]]
+    citations: list[dict[str, Any]]
     requires_approval: bool
-    approved: Optional[bool]
-    pending_action: Optional[Dict[str, Any]]
+    approved: bool | None
+    pending_action: dict[str, Any] | None
     status: str  # "completed" | "needs_approval"
 
 
@@ -42,7 +42,7 @@ class AgentState(TypedDict):
 # GRAPH NODES
 # --------------------------------------------------
 
-def reason_node(state: AgentState) -> Dict[str, Any]:
+def reason_node(state: AgentState) -> dict[str, Any]:
     """
     Analyzes the latest user message and determines the next action.
     If resuming with an approved/rejected pending action, routes accordingly.
@@ -73,7 +73,7 @@ def reason_node(state: AgentState) -> Dict[str, Any]:
 
     # Reason on fresh query
     action = None
-    action_input: Dict[str, Any] = {}
+    action_input: dict[str, Any] = {}
 
     # Check via LLM if available
     try:
@@ -116,7 +116,7 @@ def reason_node(state: AgentState) -> Dict[str, Any]:
     }
 
 
-def approval_node(state: AgentState) -> Dict[str, Any]:
+def approval_node(state: AgentState) -> dict[str, Any]:
     """
     Human-in-the-loop checkpoint node.
     Pauses execution and requests explicit human confirmation.
@@ -138,7 +138,7 @@ def approval_node(state: AgentState) -> Dict[str, Any]:
     }
 
 
-def tool_node(state: AgentState) -> Dict[str, Any]:
+def tool_node(state: AgentState) -> dict[str, Any]:
     """
     Executes the decided tool and stores observation.
     """
@@ -199,7 +199,7 @@ def tool_node(state: AgentState) -> Dict[str, Any]:
     }
 
 
-def synthesize_node(state: AgentState) -> Dict[str, Any]:
+def synthesize_node(state: AgentState) -> dict[str, Any]:
     """
     Synthesizes the final user response from tool observation and query context.
     """
@@ -299,9 +299,9 @@ agent_graph = build_agent_graph()
 
 def run_graph_agent(
     query: str,
-    thread_id: Optional[str] = None,
-    approved: Optional[bool] = None
-) -> Dict[str, Any]:
+    thread_id: str | None = None,
+    approved: bool | None = None
+) -> dict[str, Any]:
     """
     Run the LangGraph agent with session memory and human approval support.
     """

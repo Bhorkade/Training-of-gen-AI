@@ -1,0 +1,14 @@
+[
+  {
+    "application_id": "DPIIT-APP-0001",
+    "startup_name": "Demo Innovations Pvt Ltd",
+    "entity_type": "Private Limited Company",
+    "founder_name": "Applicant",
+    "email": "founder@example.com",
+    "sector": "Technology",
+    "turnover_cr": 0.5,
+    "incorporation_year": 2024,
+    "status": "SUBMITTED",
+    "created_at": "2026-11-18T08:28:33.439285"
+  }
+]

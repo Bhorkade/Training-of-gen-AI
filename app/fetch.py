@@ -1,10 +1,9 @@
 
 import json
-import requests
-
-from pathlib import Path
 from html.parser import HTMLParser
+from pathlib import Path
 
+import requests
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = BASE_DIR / "data" / "startup_india_pages.json"

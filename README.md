@@ -11,6 +11,9 @@ StartupSetu is an AI-powered platform that helps students and entrepreneurs unde
 - Sentence Transformers
 - ChromaDB
 - REST API
+- LangGraph
+- Streamlit
+
 
 ## Development Progress
 
@@ -97,6 +100,27 @@ StartupSetu is an AI-powered platform that helps students and entrepreneurs unde
 
 ## Project Status
 RAG pipeline, API integration (`POST /ask`), and comparative evaluation completed. Project development is ongoing.
+
+### Day 09 - Agent Tools, Loop & LangGraph with Memory and Approval
+- **Domain Tools (`app/tools.py`):**
+  - `check_dpiit_eligibility`: Evaluates startup eligibility based on entity type, age (<=10 years), turnover (<= ₹100 Cr), and innovation/scalability.
+  - `get_scheme_details`: Provides real-time lookup for official schemes (Seed Fund, 80-IAC, CGSS, SIPP, MSInS).
+  - `query_rag`: Direct retrieval of verified policy playbooks with citations.
+  - `submit_dpiit_application`: Mutating action recording registration drafts into `data/applications.json`.
+- **Hand-written Agent Loop (`app/agent_loop.py`):**
+  - ReAct Reason-Act-Observe cycle with tool parsing and fallback heuristic reasoning.
+- **LangGraph Agent (`app/graph.py`):**
+  - Stateful graph with `MemorySaver` for multi-turn session persistence.
+  - **Human-in-the-Loop (Approval Step):** Sensitive operations like `submit_dpiit_application` pause execution and require explicit human confirmation (`approved=True`) before persisting.
+  - Integrated `POST /agent` endpoint in FastAPI.
+
+### Day 10 - Streamlit Interactive UI & Feedback System
+- Built dual-mode interactive chat interface in `ui/app.py` supporting `/ask` (Direct RAG) and `/agent` (LangGraph Autonomous Agent).
+- Direct visualization of verified government citations (page numbers, titles, official links).
+- Interactive Human Approval interface: displays `✅ Approve Action` and `❌ Reject Action` buttons when mutating actions are requested.
+- User feedback mechanism: Thumbs Up / Down ratings saved persistently in `data/feedback.json`.
+
+![StartupSetu UI Chat Screen](docs/ui_chat_screen.png)
 
 ## Developer
 Shrikar Bhorkade

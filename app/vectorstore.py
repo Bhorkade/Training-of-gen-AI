@@ -3,10 +3,9 @@ from pathlib import Path
 
 import chromadb
 
-from app.records import load_records
 from app.chunking import chunk_records
-from app.embed import embed_texts, embed_query
-
+from app.embed import embed_query, embed_texts
+from app.records import load_records
 
 # Project paths
 BASE_DIR = Path(__file__).resolve().parent.parent

@@ -5,7 +5,6 @@ os.environ["TRANSFORMERS_OFFLINE"] = "1"
 
 from sentence_transformers import SentenceTransformer
 
-
 # Load embedding model from local cache
 model = SentenceTransformer(
     "all-MiniLM-L6-v2",

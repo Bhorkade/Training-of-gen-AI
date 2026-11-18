@@ -7,7 +7,7 @@ os.environ["TRANSFORMERS_OFFLINE"] = "1"
 import json
 import time
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Any
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 if str(BASE_DIR) not in sys.path:
@@ -20,16 +20,16 @@ RESULTS_MD_PATH = BASE_DIR / "eval" / "eval_results.md"
 
 
 def evaluate_config(
-    eval_set: List[Dict[str, Any]],
+    eval_set: list[dict[str, Any]],
     config_name: str,
     top_k: int,
     min_score: float,
     strict_refusal: bool
-) -> Dict[str, Any]:
-    print(f"\n==========================================")
+) -> dict[str, Any]:
+    print("\n==========================================")
     print(f"Running Evaluation for: {config_name}")
     print(f"Config: top_k={top_k}, min_score={min_score}, strict_refusal={strict_refusal}")
-    print(f"==========================================")
+    print("==========================================")
 
     results = []
     correct_refusals = 0
@@ -41,7 +41,8 @@ def evaluate_config(
         q_id = item["id"]
         q_text = item["question"]
         should_refuse = item["should_refuse"]
-        expected_citations = item.get("expected_citations", [])
+        _expected_citations = item.get("expected_citations", [])
+
 
         start_time = time.time()
         response = rag_answer(
@@ -195,7 +196,7 @@ def main():
     print("EVALUATION COMPLETE")
     print(f"Config 1 Overall Accuracy: {config_1['overall_accuracy']}%")
     print(f"Config 2 Overall Accuracy: {config_2['overall_accuracy']}%")
-    print(f"Better Configuration: Configuration 2")
+    print("Better Configuration: Configuration 2")
     print(f"Results table written to: {RESULTS_MD_PATH}")
     print("=" * 50)
 

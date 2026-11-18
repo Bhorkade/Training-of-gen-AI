@@ -1,5 +1,5 @@
-import os
-from typing import Dict, Any, List, Optional
+from typing import Any
+
 from app.vectorstore import semantic_search
 
 REFUSAL_MESSAGE = (
@@ -20,7 +20,7 @@ UNANSWERABLE_PATTERNS = [
 ]
 
 
-def retrieve_chunks(query: str, top_k: int = 3, min_score: float = 0.45) -> List[Dict[str, Any]]:
+def retrieve_chunks(query: str, top_k: int = 3, min_score: float = 0.45) -> list[dict[str, Any]]:
     """
     Retrieve top-k chunks from ChromaDB and filter by similarity threshold.
     """
@@ -32,7 +32,7 @@ def retrieve_chunks(query: str, top_k: int = 3, min_score: float = 0.45) -> List
     return filtered
 
 
-def extract_citations(chunks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def extract_citations(chunks: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """
     Extract unique citations from retrieved chunk metadata.
     """
@@ -59,7 +59,7 @@ def extract_citations(chunks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return citations
 
 
-def synthesize_answer(question: str, chunks: List[Dict[str, Any]], citations: List[Dict[str, Any]]) -> str:
+def synthesize_answer(question: str, chunks: list[dict[str, Any]], citations: list[dict[str, Any]]) -> str:
     """
     Synthesize an accurate, cited answer from retrieved chunks.
     """
@@ -102,7 +102,7 @@ def rag_answer(
     top_k: int = 3,
     min_score: float = 0.45,
     strict_refusal: bool = True
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Main RAG pipeline:
     1. Check for known unanswerable / out-of-scope patterns.

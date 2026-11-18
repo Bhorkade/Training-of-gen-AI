@@ -1,17 +1,15 @@
 import json
 from pathlib import Path
-from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 
+from app.graph import run_graph_agent
 from app.llm import generate_response
-from app.records import load_records, get_by_id
+from app.rag import rag_answer
+from app.records import get_by_id, load_records
 from app.smart_search import smart_search
 from app.vectorstore import semantic_search as vector_semantic_search
-from app.rag import rag_answer
-from app.graph import run_graph_agent
-
 
 # --------------------------------------------------
 # APPLICATION CONFIGURATION
@@ -35,15 +33,15 @@ class ChatRequest(BaseModel):
     question: str
 
 class AskRequest(BaseModel):
-    question: Optional[str] = None
-    query: Optional[str] = None
+    question: str | None = None
+    query: str | None = None
     top_k: int = 3
 
 class AgentRequest(BaseModel):
-    query: Optional[str] = None
-    message: Optional[str] = None
-    thread_id: Optional[str] = None
-    approved: Optional[bool] = None
+    query: str | None = None
+    message: str | None = None
+    thread_id: str | None = None
+    approved: bool | None = None
 
 
 # --------------------------------------------------
@@ -153,7 +151,7 @@ def semantic_search_endpoint(
 
         raise HTTPException(
             status_code=500,
-            detail=f"Semantic search error: {str(error)}"
+            detail=f"Semantic search error: {error!s}"
         )
 
 # --------------------------------------------------
@@ -344,7 +342,7 @@ Instructions:
 
         raise HTTPException(
             status_code=502,
-            detail=f"AI service error: {str(error)}"
+            detail=f"AI service error: {error!s}"
         )
 
 # --------------------------------------------------
@@ -373,7 +371,7 @@ def ask(request: AskRequest):
     except Exception as error:
         raise HTTPException(
             status_code=500,
-            detail=f"RAG processing error: {str(error)}"
+            detail=f"RAG processing error: {error!s}"
         )
 
 # --------------------------------------------------
@@ -402,6 +400,6 @@ def agent_endpoint(request: AgentRequest):
     except Exception as error:
         raise HTTPException(
             status_code=500,
-            detail=f"Agent execution error: {str(error)}"
+            detail=f"Agent execution error: {error!s}"
         )
 

@@ -5,8 +5,10 @@ pandas
 scikit-learn
 google-genai
 python-dotenv
-
 sentence-transformers
 chromadb
-chromadb
-sentence-transformers
+langgraph
+streamlit
+pytest
+ruff
+pillow

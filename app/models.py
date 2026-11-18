@@ -1,5 +1,6 @@
 
-from dataclasses import dataclass, asdict, field
+from dataclasses import asdict, dataclass, field
+
 
 def clean_value(value):
     if value is None:

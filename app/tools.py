@@ -7,10 +7,10 @@ Tools derived from the DPIIT Startup Recognition Guide Project Card:
 - query_rag: Calls the StartupSetu RAG pipeline for official document knowledge & citations.
 """
 
-from datetime import datetime
 import json
+from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from app.rag import rag_answer
 
@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 APPLICATIONS_FILE = BASE_DIR / "data" / "applications.json"
 
 # Known Government Schemes Registry for StartupSetu
-SCHEMES_REGISTRY: Dict[str, Dict[str, Any]] = {
+SCHEMES_REGISTRY: dict[str, dict[str, Any]] = {
     "seed_fund": {
         "name": "Startup India Seed Fund Scheme (SISFS)",
         "funding": "Up to ₹20 Lakhs for validation/PoC; up to ₹50 Lakhs for commercialization (debt/convertible debenture)",
@@ -63,7 +63,7 @@ def check_dpiit_eligibility(
     annual_turnover_cr: float,
     is_innovative: bool = True,
     current_year: int = 2026
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Check if a startup satisfies official DPIIT Recognition Criteria:
     1. Entity Type: Private Limited, LLP, or Registered Partnership (Sole proprietorship is ineligible).
@@ -91,7 +91,7 @@ def check_dpiit_eligibility(
 
     is_eligible = entity_ok and age_ok and turnover_ok and innovation_ok
 
-    reasons: List[str] = []
+    reasons: list[str] = []
     if not entity_ok:
         reasons.append(
             f"Entity type '{entity_type}' is not recognized. Must be Private Limited Company, LLP, or Registered Partnership."
@@ -109,7 +109,7 @@ def check_dpiit_eligibility(
             "Startup must be working towards innovation, development or improvement of products/services or a scalable business model."
         )
 
-    benefits: List[str] = []
+    benefits: list[str] = []
     if is_eligible:
         benefits = [
             "Access to Section 80-IAC 3-year income tax exemption",
@@ -143,7 +143,7 @@ def check_dpiit_eligibility(
     }
 
 
-def get_scheme_details(scheme_query: str) -> Dict[str, Any]:
+def get_scheme_details(scheme_query: str) -> dict[str, Any]:
     """
     Search and retrieve verified government startup schemes by name or category.
     """
@@ -179,7 +179,7 @@ def get_scheme_details(scheme_query: str) -> Dict[str, Any]:
     }
 
 
-def query_rag(question: str, top_k: int = 3) -> Dict[str, Any]:
+def query_rag(question: str, top_k: int = 3) -> dict[str, Any]:
     """
     Query the StartupSetu RAG pipeline to retrieve verified document chunks,
     official citations (source URL, title, page), and refusal handling.
@@ -195,14 +195,14 @@ def submit_dpiit_application(
     sector: str = "Technology",
     turnover_cr: float = 0.5,
     incorporation_year: int = 2024
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Record an application for DPIIT Recognition.
     NOTE: This is a sensitive action that modifies application state.
     """
     APPLICATIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-    applications: List[Dict[str, Any]] = []
+    applications: list[dict[str, Any]] = []
     if APPLICATIONS_FILE.exists():
         try:
             with open(APPLICATIONS_FILE, "r", encoding="utf-8") as f:
