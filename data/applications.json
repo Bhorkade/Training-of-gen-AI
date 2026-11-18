@@ -10,5 +10,29 @@
     "incorporation_year": 2024,
     "status": "SUBMITTED",
     "created_at": "2026-11-18T08:28:33.439285"
+  },
+  {
+    "application_id": "DPIIT-APP-0002",
+    "startup_name": "Test Robotics Pvt Ltd",
+    "entity_type": "Private Limited Company",
+    "founder_name": "Pooja Sharma",
+    "email": "pooja@testrobotics.com",
+    "sector": "Technology",
+    "turnover_cr": 0.5,
+    "incorporation_year": 2024,
+    "status": "SUBMITTED",
+    "created_at": "2026-11-18T10:15:09.210321"
+  },
+  {
+    "application_id": "DPIIT-APP-0003",
+    "startup_name": "Demo Innovations Pvt Ltd",
+    "entity_type": "Private Limited Company",
+    "founder_name": "Applicant",
+    "email": "founder@example.com",
+    "sector": "Technology",
+    "turnover_cr": 0.5,
+    "incorporation_year": 2024,
+    "status": "SUBMITTED",
+    "created_at": "2026-11-18T10:25:58.156712"
   }
 ]

@@ -13,6 +13,10 @@ StartupSetu is an AI-powered platform that helps students and entrepreneurs unde
 - REST API
 - LangGraph
 - Streamlit
+- Pytest
+- Ruff
+- Docker & Docker Compose
+
 
 
 ## Development Progress
@@ -121,6 +125,70 @@ RAG pipeline, API integration (`POST /ask`), and comparative evaluation complete
 - User feedback mechanism: Thumbs Up / Down ratings saved persistently in `data/feedback.json`.
 
 ![StartupSetu UI Chat Screen](docs/ui_chat_screen.png)
+
+### Day 11 - Testing Suite, Code Quality & Docker Containerization
+- **Automated Test Suite (`tests/`):**
+  - Created 20 comprehensive automated unit and integration tests across 5 modules:
+    - `tests/test_health.py`: Verifies `GET /health` system readiness.
+    - `tests/test_records.py`: Tests data loading, pagination, and ID retrieval (including 404 handling).
+    - `tests/test_search.py`: Tests TF-IDF smart search, query matching, and parameter validation.
+    - `tests/test_rag.py`: Tests `POST /ask` with mock/fake LLM synthesis, citation extraction, and strict refusal on out-of-scope queries.
+    - `tests/test_agent.py`: Validates DPIIT eligibility evaluation logic, scheme lookup, application creation, hand-written agent loop, and LangGraph human approval step.
+  - All 20 tests pass (`pytest -q` 100% green).
+- **Code Quality & Linting:**
+  - Configured `pyproject.toml` with Ruff standards.
+  - Passed `ruff check .` with zero linting or formatting errors.
+- **Docker Containerization:**
+  - Authored production `Dockerfile` with multi-service support.
+  - Created `.dockerignore` to keep image builds lightweight and secure.
+  - Configured multi-container orchestration with `docker-compose.yml` linking the FastAPI backend (`api`) and Streamlit frontend (`ui`).
+
+---
+
+## Run with Docker
+
+StartupSetu can be launched with Docker and Docker Compose.
+
+### 1. Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
+- A valid Gemini API Key (set in `.env`).
+
+### 2. Configure Environment
+Create or edit your `.env` file in the project root:
+```env
+GEMINI_API_KEY=your_actual_gemini_api_key_here
+GEMINI_MODEL=gemini-3.8-flash
+```
+
+### 3. Build and Start Services
+Run the following command from the project root:
+```bash
+docker compose up --build
+```
+
+To run in detached mode (background):
+```bash
+docker compose up -d --build
+```
+
+### 4. Access the Application
+Once running, the following services are available:
+
+| Service | URL | Description |
+|---|---|---|
+| **Streamlit Interactive UI** | [http://localhost:8501](http://localhost:8501) | Full chat UI with dual modes, citations, approval buttons, and feedback. |
+| **FastAPI Interactive Docs (Swagger)** | [http://localhost:8000/docs](http://localhost:8000/docs) | Interactive OpenAPI documentation for all endpoints. |
+| **API Health Check** | [http://localhost:8000/health](http://localhost:8000/health) | System health and readiness verification. |
+| **RAG Query Endpoint** | `POST http://localhost:8000/ask` | Direct RAG queries with citations and refusal filters. |
+| **LangGraph Agent Endpoint** | `POST http://localhost:8000/agent` | Autonomous agent with memory and human-in-the-loop approval. |
+
+### 5. Stopping the Containers
+To stop and remove containers and networks:
+```bash
+docker compose down
+```
+
+---
 
 ## Developer
 Shrikar Bhorkade
