@@ -8,9 +8,9 @@ Tools derived from the DPIIT Startup Recognition Guide Project Card:
 """
 
 import json
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
 
 from app.rag import rag_answer
 
@@ -59,9 +59,10 @@ SCHEMES_REGISTRY: dict[str, dict[str, Any]] = {
 
 def check_dpiit_eligibility(
     entity_type: str,
-    incorporation_year: int,
-    annual_turnover_cr: float,
+    incorporation_year: Optional[int] = None,
+    annual_turnover_cr: float = 0.0,
     is_innovative: bool = True,
+    incorporation_date: Optional[Union[str, date]] = None,
     current_year: int = 2026
 ) -> dict[str, Any]:
     """
@@ -71,6 +72,22 @@ def check_dpiit_eligibility(
     3. Turnover: Annual turnover has never exceeded ₹100 Crore in any financial year.
     4. Innovation / Scalability: Working towards innovation or scalable business model.
     """
+    # Parse incorporation date if provided
+    resolved_year = incorporation_year
+    if incorporation_date:
+        try:
+            if isinstance(incorporation_date, (date, datetime)):
+                resolved_year = incorporation_date.year
+            else:
+                date_str = str(incorporation_date).strip()
+                # Parse YYYY-MM-DD or extract 4-digit year
+                resolved_year = int(date_str.split("-")[0])
+        except Exception:
+            resolved_year = incorporation_year or 2024
+
+    if resolved_year is None:
+        resolved_year = 2024
+
     normalized_entity = entity_type.strip().lower()
     valid_entities = [
         "private limited",
@@ -84,7 +101,7 @@ def check_dpiit_eligibility(
     ]
 
     entity_ok = any(e in normalized_entity for e in valid_entities)
-    years_active = max(0, current_year - incorporation_year)
+    years_active = max(0, current_year - resolved_year)
     age_ok = years_active <= 10
     turnover_ok = annual_turnover_cr <= 100.0
     innovation_ok = bool(is_innovative)
@@ -127,6 +144,20 @@ def check_dpiit_eligibility(
         else f"Startup is not currently eligible: {'; '.join(reasons)}"
     )
 
+    cited_rule = {
+        "notification": "Gazette Notification G.S.R. 127(E), Ministry of Commerce and Industry (DPIIT)",
+        "title": "DPIIT Startup Recognition Definition & Statutory Criteria",
+        "source_url": "https://www.startupindia.gov.in/content/sih/en/startupgov/startup_recognition_page.html",
+        "summary": "Under DPIIT Notification G.S.R. 127(E), an entity is recognized as a Startup if it satisfies all 4 conditions:",
+        "rules": [
+            "1. Entity Structure: Must be a Private Limited Company, Limited Liability Partnership (LLP), or Registered Partnership Firm. (Sole proprietorships & unregistered firms are ineligible).",
+            "2. Period of Existence: Up to 10 years from the date of its incorporation/registration.",
+            "3. Turnover Cap: Turnover of the entity for any of the financial years since incorporation/registration has not exceeded ₹100 Crore.",
+            "4. Innovation & Scalability: Entity is working towards innovation, development or improvement of products or processes or services, or if it is a scalable business model with a high potential of employment generation or wealth creation.",
+            "5. Reconstruction Exclusion: Must not have been formed by splitting up or reconstruction of an existing business."
+        ]
+    }
+
     return {
         "is_eligible": is_eligible,
         "criteria": {
@@ -136,11 +167,14 @@ def check_dpiit_eligibility(
             "innovative_scalable": innovation_ok
         },
         "years_active": years_active,
+        "incorporation_year": resolved_year,
         "annual_turnover_cr": annual_turnover_cr,
         "reasons": reasons,
         "summary": summary,
-        "recommended_benefits": benefits
+        "recommended_benefits": benefits,
+        "cited_rule": cited_rule
     }
+
 
 
 def get_scheme_details(scheme_query: str) -> dict[str, Any]:

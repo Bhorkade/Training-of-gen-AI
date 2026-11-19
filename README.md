@@ -118,13 +118,23 @@ RAG pipeline, API integration (`POST /ask`), and comparative evaluation complete
   - **Human-in-the-Loop (Approval Step):** Sensitive operations like `submit_dpiit_application` pause execution and require explicit human confirmation (`approved=True`) before persisting.
   - Integrated `POST /agent` endpoint in FastAPI.
 
-### Day 10 - Streamlit Interactive UI & Feedback System
-- Built dual-mode interactive chat interface in `ui/app.py` supporting `/ask` (Direct RAG) and `/agent` (LangGraph Autonomous Agent).
-- Direct visualization of verified government citations (page numbers, titles, official links).
-- Interactive Human Approval interface: displays `✅ Approve Action` and `❌ Reject Action` buttons when mutating actions are requested.
-- User feedback mechanism: Thumbs Up / Down ratings saved persistently in `data/feedback.json`.
+### Day 10 - Streamlit Interactive UI, Eligibility Form & Feedback System
+- **Signature 'Am I a startup?' Form (`st.form`):**
+  - Features the dedicated `am_i_a_startup_form` assessing the 4 statutory pillars:
+    1. **Entity Type:** Select from Private Limited Company, LLP, Registered Partnership Firm, or Sole Proprietorship.
+    2. **Incorporation Date:** Calendar selector evaluating operational age $\le 10$ years.
+    3. **Annual Turnover:** Number input verifying turnover $\le ₹100\text{ Crore}$ in any financial year.
+    4. **Innovation & Scalability:** Checkbox evaluating innovation, product/service development, or scalable business model.
+  - Directly invokes the `check_dpiit_eligibility` domain tool.
+  - **Cited DPIIT Rule:** Displays the official statutory citation under **Gazette Notification G.S.R. 127(E)** (Ministry of Commerce & Industry) with links to the official Startup India portal.
+- **Dual-Mode Interactive Chat:**
+  - Chat interface supporting `/ask` (Direct RAG) and `/agent` (LangGraph Autonomous Agent with multi-turn memory).
+  - Visualization of verified government citations (page numbers, titles, official links).
+  - Interactive Human Approval interface: displays `✅ Approve Action` and `❌ Reject Action` buttons when mutating actions are requested.
+  - User feedback mechanism: Thumbs Up / Down ratings saved persistently in `data/feedback.json`.
 
 ![StartupSetu UI Chat Screen](docs/ui_chat_screen.png)
+
 
 ### Day 11 - Testing Suite, Code Quality & Docker Containerization
 - **Automated Test Suite (`tests/`):**

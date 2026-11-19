@@ -17,6 +17,36 @@ def test_check_dpiit_eligibility_eligible():
     assert result["is_eligible"] is True
     assert result["years_active"] == 2
     assert len(result["recommended_benefits"]) > 0
+    assert "cited_rule" in result
+    assert "G.S.R. 127(E)" in result["cited_rule"]["notification"]
+
+
+def test_check_dpiit_eligibility_with_date():
+    result = check_dpiit_eligibility(
+        entity_type="Limited Liability Partnership (LLP)",
+        incorporation_date="2023-06-15",
+        annual_turnover_cr=1.5,
+        is_innovative=True,
+    )
+    assert result["is_eligible"] is True
+    assert result["incorporation_year"] == 2023
+    assert len(result["cited_rule"]["rules"]) >= 4
+
+
+def test_eligibility_endpoint(client):
+    payload = {
+        "entity_type": "Private Limited Company",
+        "incorporation_date": "2024-03-20",
+        "annual_turnover_cr": 3.0,
+        "is_innovative": True,
+    }
+    response = client.post("/eligibility", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["is_eligible"] is True
+    assert "cited_rule" in data
+    assert "DPIIT" in data["cited_rule"]["title"]
+
 
 
 def test_check_dpiit_eligibility_ineligible_entity():

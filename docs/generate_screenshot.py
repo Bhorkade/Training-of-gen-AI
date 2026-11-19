@@ -1,5 +1,6 @@
 """
-Generate high-fidelity UI screenshot for README documentation.
+Generate high-fidelity UI screenshot showing 'Am I a startup?' st.form,
+cited DPIIT statutory rules, and chat assistant for README documentation.
 """
 
 from pathlib import Path
@@ -12,128 +13,155 @@ DOCS_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUT_PATH = DOCS_DIR / "ui_chat_screen.png"
 
 # Image dimensions
-W, H = 1280, 820
+W, H = 1320, 880
 img = Image.new("RGB", (W, H), color="#0F172A")
 draw = ImageDraw.Draw(img)
 
 # Try loading standard font or default
 try:
-    font_title = ImageFont.truetype("arial.ttf", 26)
-    font_sub = ImageFont.truetype("arial.ttf", 15)
-    font_bold = ImageFont.truetype("arialbd.ttf", 16)
-    font_regular = ImageFont.truetype("arial.ttf", 14)
-    font_small = ImageFont.truetype("arial.ttf", 12)
-    font_code = ImageFont.truetype("consola.ttf", 13)
+    font_title = ImageFont.truetype("arial.ttf", 24)
+    font_sub = ImageFont.truetype("arial.ttf", 14)
+    font_bold = ImageFont.truetype("arialbd.ttf", 15)
+    font_regular = ImageFont.truetype("arial.ttf", 13)
+    font_small = ImageFont.truetype("arial.ttf", 11)
+    font_code = ImageFont.truetype("consola.ttf", 12)
 except Exception:
     font_title = font_sub = font_bold = font_regular = font_small = font_code = ImageFont.load_default()
 
 # App Window Chrome
-draw.rectangle([(20, 20), (W - 20, H - 20)], fill="#FFFFFF", outline="#E2E8F0", width=1)
+draw.rectangle([(20, 20), (W - 20, H - 20)], fill="#FFFFFF", outline="#CBD5E1", width=1)
 # Window Header Bar
-draw.rectangle([(20, 20), (W - 20, 60)], fill="#F8FAFC")
-draw.ellipse([(35, 36), (47, 48)], fill="#EF4444")
-draw.ellipse([(55, 36), (67, 48)], fill="#F59E0B")
-draw.ellipse([(75, 36), (87, 48)], fill="#10B981")
-draw.text((W // 2 - 120, 33), "StartupSetu AI Platform — Streamlit Assistant", fill="#475569", font=font_small)
+draw.rectangle([(20, 20), (W - 20, 58)], fill="#F8FAFC")
+draw.ellipse([(35, 34), (47, 46)], fill="#EF4444")
+draw.ellipse([(55, 34), (67, 46)], fill="#F59E0B")
+draw.ellipse([(75, 34), (87, 46)], fill="#10B981")
+draw.text((W // 2 - 140, 32), "StartupSetu AI Platform — Streamlit UI (Day 10)", fill="#475569", font=font_small)
 
 # Sidebar (Left)
-sidebar_w = 320
-draw.rectangle([(20, 61), (20 + sidebar_w, H - 20)], fill="#F1F5F9")
-draw.text((45, 80), "⚙️ System Control", fill="#0F172A", font=font_bold)
+sidebar_w = 290
+draw.rectangle([(20, 59), (20 + sidebar_w, H - 20)], fill="#F8FAFC", outline="#E2E8F0", width=1)
+draw.text((40, 75), "⚙️ System Control", fill="#0F172A", font=font_bold)
 
 # API Status Badge
-draw.rectangle([(45, 115), (280, 150)], fill="#DCFCE7", outline="#86EFAC", width=1)
-draw.ellipse([(58, 128), (68, 138)], fill="#16A34A")
-draw.text((76, 124), "API Online (FastAPI:8000)", fill="#166534", font=font_bold)
+draw.rectangle([(40, 105), (280, 138)], fill="#DCFCE7", outline="#86EFAC", width=1)
+draw.ellipse([(52, 117), (62, 127)], fill="#16A34A")
+draw.text((70, 115), "● API Online (FastAPI)", fill="#166534", font=font_bold)
 
-# Radio Options
-draw.text((45, 175), "Select Processing Engine:", fill="#334155", font=font_bold)
-draw.rectangle([(45, 205), (295, 240)], fill="#3B82F6", outline="#2563EB", width=1)
-draw.text((60, 215), "● LangGraph Agent (/agent)", fill="#FFFFFF", font=font_bold)
-
-draw.rectangle([(45, 250), (295, 285)], fill="#FFFFFF", outline="#CBD5E1", width=1)
-draw.text((60, 260), "○ Direct RAG Pipeline (/ask)", fill="#475569", font=font_regular)
+# Processing Engine Options
+draw.text((40, 155), "Processing Engine:", fill="#334155", font=font_bold)
+draw.rectangle([(40, 180), (280, 212)], fill="#3B82F6", outline="#2563EB", width=1)
+draw.text((55, 190), "● LangGraph Agent (/agent)", fill="#FFFFFF", font=font_bold)
+draw.rectangle([(40, 218), (280, 250)], fill="#FFFFFF", outline="#CBD5E1", width=1)
+draw.text((55, 228), "○ Direct RAG (/ask)", fill="#475569", font=font_regular)
 
 # Sidebar Prompts
-draw.text((45, 310), "💡 Quick Inquiries", fill="#334155", font=font_bold)
+draw.text((40, 270), "💡 Example Queries", fill="#334155", font=font_bold)
 samples = [
-    "What is DPIIT Startup Recognition?",
+    "What is DPIIT Recognition?",
     "Check eligibility: Pvt Ltd, 2 Cr",
     "Startup India Seed Fund Scheme",
-    "Apply for DPIIT Recognition"
+    "Section 80-IAC tax exemption"
 ]
-y_sample = 340
+y_sample = 295
 for s in samples:
-    draw.rectangle([(45, y_sample), (295, y_sample + 32)], fill="#FFFFFF", outline="#E2E8F0", width=1)
-    draw.text((55, y_sample + 7), s, fill="#1E293B", font=font_small)
-    y_sample += 40
+    draw.rectangle([(40, y_sample), (280, y_sample + 28)], fill="#FFFFFF", outline="#E2E8F0", width=1)
+    draw.text((50, y_sample + 6), s, fill="#334155", font=font_small)
+    y_sample += 35
 
-# Clear Chat Button
-draw.rectangle([(45, H - 75), (295, H - 40)], fill="#FEE2E2", outline="#FCA5A5", width=1)
-draw.text((95, H - 65), "🗑️ Clear Conversation", fill="#991B1B", font=font_bold)
+# Clear Button
+draw.rectangle([(40, H - 65), (280, H - 35)], fill="#FEE2E2", outline="#FCA5A5", width=1)
+draw.text((80, H - 55), "🗑️ Clear Conversation", fill="#991B1B", font=font_bold)
 
 # Main Area (Right)
-main_x = 20 + sidebar_w + 30
-draw.text((main_x, 80), "StartupSetu AI Platform", fill="#1E3A8A", font=font_title)
-draw.text((main_x, 115), "AI-Powered DPIIT Startup Recognition, Funding Schemes & Official Guidance", fill="#64748B", font=font_sub)
+main_x = 20 + sidebar_w + 25
+draw.text((main_x, 70), "StartupSetu AI Platform", fill="#1E3A8A", font=font_title)
+draw.text((main_x, 100), "Official DPIIT Startup Recognition, Funding Schemes & Policy Guidance for Founders", fill="#64748B", font=font_sub)
 
-# Chat Message 1: User
-y_chat = 155
-draw.rectangle([(main_x, y_chat), (W - 50, y_chat + 50)], fill="#EFF6FF", outline="#DBEAFE", width=1)
-draw.text((main_x + 15, y_chat + 15), "👤 Check eligibility for my Pvt Ltd company incorporated in 2024 with 2 crore turnover", fill="#1E3A8A", font=font_bold)
+# Navigation Tabs
+draw.rectangle([(main_x, 125), (main_x + 280, 158)], fill="#3B82F6", outline="#2563EB", width=1)
+draw.text((main_x + 15, 135), "🚀 'Am I a startup?' Form (Active)", fill="#FFFFFF", font=font_bold)
 
-# Chat Message 2: Assistant Reply
-y_chat += 65
-draw.rectangle([(main_x, y_chat), (W - 50, y_chat + 310)], fill="#F8FAFC", outline="#E2E8F0", width=1)
-draw.text((main_x + 15, y_chat + 12), "🤖 StartupSetu Agent:", fill="#0F172A", font=font_bold)
+draw.rectangle([(main_x + 285, 125), (main_x + 540, 158)], fill="#F1F5F9", outline="#CBD5E1", width=1)
+draw.text((main_x + 300, 135), "💬 AI Chat Assistant (/ask & /agent)", fill="#475569", font=font_regular)
 
-res_lines = [
-    "Assessment: ELIGIBLE for official DPIIT Startup Recognition.",
-    "• Entity Type Valid: True (Private Limited Company)",
-    "• Age <= 10 Years: True (2 years active since 2024)",
-    "• Annual Turnover <= ₹100 Cr: True (₹2.0 Crore)",
-    "• Innovation & Scalability: True",
-    "",
-    "Available Government Benefits Upon Recognition:",
-    "✔ Section 80-IAC 3-Year Income Tax Exemption on profits",
-    "✔ 80% Rebate on Patent Filing and 50% on Trademark Fees",
-    "✔ Access to Startup India Seed Fund Scheme (up to ₹50 Lakhs)",
-    "✔ Self-certification under 6 Labour and 3 Environmental Laws"
+# Section Header
+draw.text((main_x, 172), "📋 'Am I a startup?' — Official DPIIT Recognition Evaluation", fill="#0F172A", font=font_bold)
+
+# Form Container (st.form)
+form_y = 195
+form_w = W - main_x - 35
+form_h = 230
+draw.rectangle([(main_x, form_y), (main_x + form_w, form_y + form_h)], fill="#F8FAFC", outline="#3B82F6", width=2)
+draw.text((main_x + 15, form_y + 10), "st.form('am_i_a_startup_form')", fill="#2563EB", font=font_code)
+
+# Input 1: Entity Type
+draw.text((main_x + 20, form_y + 35), "1. Entity Type", fill="#334155", font=font_bold)
+draw.rectangle([(main_x + 20, form_y + 55), (main_x + form_w // 2 - 15, form_y + 88)], fill="#FFFFFF", outline="#94A3B8", width=1)
+draw.text((main_x + 30, form_y + 65), "Private Limited Company ▾", fill="#0F172A", font=font_regular)
+
+# Input 2: Incorporation Date
+draw.text((main_x + 20, form_y + 98), "2. Incorporation Date", fill="#334155", font=font_bold)
+draw.rectangle([(main_x + 20, form_y + 118), (main_x + form_w // 2 - 15, form_y + 151)], fill="#FFFFFF", outline="#94A3B8", width=1)
+draw.text((main_x + 30, form_y + 128), "2024-01-15 📅", fill="#0F172A", font=font_regular)
+
+# Input 3: Turnover
+col2_x = main_x + form_w // 2 + 15
+draw.text((col2_x, form_y + 35), "3. Annual Turnover (₹ in Crores)", fill="#334155", font=font_bold)
+draw.rectangle([(col2_x, form_y + 55), (main_x + form_w - 20, form_y + 88)], fill="#FFFFFF", outline="#94A3B8", width=1)
+draw.text((col2_x + 10, form_y + 65), "2.00 Cr", fill="#0F172A", font=font_regular)
+
+# Input 4: Innovation
+draw.text((col2_x, form_y + 98), "4. Innovation & Scalability", fill="#334155", font=font_bold)
+draw.rectangle([(col2_x, form_y + 118), (col2_x + 22, form_y + 140)], fill="#3B82F6", outline="#2563EB", width=1)
+draw.text((col2_x + 6, form_y + 122), "✔", fill="#FFFFFF", font=font_bold)
+draw.text((col2_x + 30, form_y + 123), "Working towards innovation, scalable business model", fill="#0F172A", font=font_small)
+
+# Form Submit Button
+draw.rectangle([(main_x + 20, form_y + 172), (main_x + form_w - 20, form_y + 212)], fill="#2563EB", outline="#1D4ED8", width=1)
+draw.text((main_x + form_w // 2 - 90, form_y + 185), "🔍 Evaluate Startup Eligibility", fill="#FFFFFF", font=font_bold)
+
+# Result Verdict Box
+res_y = form_y + form_h + 15
+draw.rectangle([(main_x, res_y), (main_x + form_w, res_y + 45)], fill="#DCFCE7", outline="#86EFAC", width=1)
+draw.text((main_x + 15, res_y + 13), "🎉 VERDICT: ELIGIBLE FOR OFFICIAL DPIIT STARTUP RECOGNITION", fill="#166534", font=font_bold)
+
+# 4 Metric Cards
+metric_y = res_y + 55
+card_w = (form_w - 30) // 4
+metrics = [
+    ("Entity Type", "Valid", "Private Ltd Co"),
+    ("Age (≤ 10 Yrs)", "Valid", "2 yrs active"),
+    ("Turnover (≤ ₹100 Cr)", "Valid", "₹2.0 Cr"),
+    ("Innovation", "Satisfied", "Scalable model")
 ]
-y_text = y_chat + 38
-for line in res_lines:
-    draw.text((main_x + 25, y_text), line, fill="#334155", font=font_regular)
-    y_text += 20
+for i, (label, val, delta) in enumerate(metrics):
+    mx = main_x + i * (card_w + 10)
+    draw.rectangle([(mx, metric_y), (mx + card_w, metric_y + 55)], fill="#F8FAFC", outline="#E2E8F0", width=1)
+    draw.text((mx + 10, metric_y + 6), label, fill="#64748B", font=font_small)
+    draw.text((mx + 10, metric_y + 22), val, fill="#16A34A", font=font_bold)
+    draw.text((mx + 10, metric_y + 38), delta, fill="#475569", font=font_small)
 
-# Citation Box inside Assistant message
-draw.rectangle([(main_x + 25, y_text + 5), (W - 80, y_text + 65)], fill="#EFF6FF", outline="#93C5FD", width=1)
-draw.text((main_x + 35, y_text + 12), "📚 Citation: DPIIT Startup Recognition Guidelines [Page 1]", fill="#1E40AF", font=font_bold)
-draw.text((main_x + 35, y_text + 34), "Official Portal: https://www.startupindia.gov.in/content/sih/en/startupgov/startup_recognition_page.html", fill="#2563EB", font=font_small)
+# Cited DPIIT Statutory Rule Card
+rule_y = metric_y + 65
+rule_h = 165
+draw.rectangle([(main_x, rule_y), (main_x + form_w, rule_y + rule_h)], fill="#EFF6FF", outline="#60A5FA", width=1)
+draw.text((main_x + 15, rule_y + 10), "📜 Cited DPIIT Statutory Rule: Gazette Notification G.S.R. 127(E)", fill="#1E40AF", font=font_bold)
+draw.text((main_x + 15, rule_y + 30), "Ministry of Commerce and Industry (DPIIT) • Portal: https://www.startupindia.gov.in/", fill="#2563EB", font=font_small)
 
-# Thumbs up / down feedback row
-y_fb = y_chat + 320
-draw.rectangle([(main_x, y_fb), (main_x + 110, y_fb + 32)], fill="#DCFCE7", outline="#86EFAC", width=1)
-draw.text((main_x + 15, y_fb + 7), "👍 Helpful", fill="#166534", font=font_bold)
+rules_text = [
+    "• Entity Structure: Must be Private Limited Company, LLP, or Registered Partnership (Sole proprietorships excluded).",
+    "• Period of Existence: Up to 10 years from the date of incorporation or registration.",
+    "• Turnover Cap: Turnover has not exceeded ₹100 Crore for any financial year since incorporation.",
+    "• Innovation & Scalability: Working towards innovation or scalable model with potential for employment/wealth generation.",
+    "• Reconstruction Exclusion: Entity must not be formed by splitting up or reconstruction of an existing business."
+]
+rt_y = rule_y + 52
+for r in rules_text:
+    draw.text((main_x + 20, rt_y), r, fill="#1E293B", font=font_small)
+    rt_y += 18
 
-draw.rectangle([(main_x + 125, y_fb), (main_x + 225, y_fb + 32)], fill="#F1F5F9", outline="#CBD5E1", width=1)
-draw.text((main_x + 145, y_fb + 7), "👎 Poor", fill="#475569", font=font_regular)
-draw.text((main_x + 245, y_fb + 8), "✓ Feedback saved to data/feedback.json", fill="#059669", font=font_small)
-
-# Approval Required Banner
-y_app = y_fb + 45
-draw.rectangle([(main_x, y_app), (W - 50, y_app + 80)], fill="#FEF3C7", outline="#FCD34D", width=1)
-draw.text((main_x + 15, y_app + 12), "⚠️ Human Approval Required: The agent is preparing to execute 'submit_dpiit_application'", fill="#92400E", font=font_bold)
-draw.rectangle([(main_x + 25, y_app + 40), (main_x + 180, y_app + 70)], fill="#16A34A")
-draw.text((main_x + 40, y_app + 47), "✅ Approve Action", fill="#FFFFFF", font=font_bold)
-draw.rectangle([(main_x + 195, y_app + 40), (main_x + 340, y_app + 70)], fill="#DC2626")
-draw.text((main_x + 215, y_app + 47), "❌ Reject Action", fill="#FFFFFF", font=font_bold)
-
-# Chat Input Box at bottom
-y_input = H - 85
-draw.rectangle([(main_x, y_input), (W - 50, y_input + 45)], fill="#F8FAFC", outline="#CBD5E1", width=1)
-draw.text((main_x + 15, y_input + 13), "Ask about DPIIT startup recognition, eligibility, or funding schemes...", fill="#94A3B8", font=font_regular)
-draw.rectangle([(W - 110, y_input + 6), (W - 60, y_input + 39)], fill="#2563EB", outline="#1D4ED8", width=1)
-draw.text((W - 95, y_input + 13), "Send", fill="#FFFFFF", font=font_bold)
+# Government Benefits Row
+draw.text((main_x, rule_y + rule_h + 10), "🎁 Available Benefits: Section 80-IAC 3-Year Tax Exemption • 80% Patent Rebate • ₹50L Seed Fund Scheme", fill="#059669", font=font_bold)
 
 img.save(OUTPUT_PATH, "PNG")
-print(f"Screenshot saved to: {OUTPUT_PATH}")
+print(f"Updated UI screenshot saved to: {OUTPUT_PATH}")

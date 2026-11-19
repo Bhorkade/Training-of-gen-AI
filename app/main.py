@@ -9,6 +9,7 @@ from app.llm import generate_response
 from app.rag import rag_answer
 from app.records import get_by_id, load_records
 from app.smart_search import smart_search
+from app.tools import check_dpiit_eligibility
 from app.vectorstore import semantic_search as vector_semantic_search
 
 # --------------------------------------------------
@@ -42,6 +43,14 @@ class AgentRequest(BaseModel):
     message: str | None = None
     thread_id: str | None = None
     approved: bool | None = None
+
+class EligibilityRequest(BaseModel):
+    entity_type: str
+    incorporation_year: int | None = None
+    incorporation_date: str | None = None
+    annual_turnover_cr: float = 0.0
+    is_innovative: bool = True
+
 
 
 # --------------------------------------------------
@@ -402,4 +411,28 @@ def agent_endpoint(request: AgentRequest):
             status_code=500,
             detail=f"Agent execution error: {error!s}"
         )
+
+# --------------------------------------------------
+# DPIIT ELIGIBILITY TOOL ENDPOINT
+# POST /eligibility
+# --------------------------------------------------
+
+@app.post("/eligibility")
+def check_eligibility_endpoint(request: EligibilityRequest):
+    try:
+        response = check_dpiit_eligibility(
+            entity_type=request.entity_type,
+            incorporation_year=request.incorporation_year,
+            annual_turnover_cr=request.annual_turnover_cr,
+            is_innovative=request.is_innovative,
+            incorporation_date=request.incorporation_date
+        )
+        return response
+
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Eligibility evaluation error: {error!s}"
+        )
+
 
