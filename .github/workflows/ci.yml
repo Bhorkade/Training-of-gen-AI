@@ -33,8 +33,7 @@ jobs:
       - name: Run Pytest Test Suite
         env:
           GEMINI_API_KEY: "test-fake-key"
-          TRANSFORMERS_OFFLINE: "1"
-          HF_HUB_OFFLINE: "1"
           PYTHONPATH: "."
         run: |
           pytest -q
+
