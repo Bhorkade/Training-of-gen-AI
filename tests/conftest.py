@@ -12,8 +12,6 @@ if str(BASE_DIR) not in sys.path:
 
 # Set test environment
 os.environ["GEMINI_API_KEY"] = "fake-test-api-key"
-os.environ["TRANSFORMERS_OFFLINE"] = "1"
-os.environ["HF_HUB_OFFLINE"] = "1"
 
 from app.main import app
 

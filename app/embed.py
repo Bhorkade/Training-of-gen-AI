@@ -1,15 +1,16 @@
-import os
-
-os.environ["HF_HUB_OFFLINE"] = "1"
-os.environ["TRANSFORMERS_OFFLINE"] = "1"
+import logging
 
 from sentence_transformers import SentenceTransformer
 
-# Load embedding model from local cache
-model = SentenceTransformer(
-    "all-MiniLM-L6-v2",
-    local_files_only=True
-)
+logger = logging.getLogger(__name__)
+
+# Load embedding model from local cache if available; otherwise download (e.g. in CI/Docker)
+try:
+    model = SentenceTransformer("all-MiniLM-L6-v2", local_files_only=True)
+except Exception:
+    logger.info("Local model cache not found. Downloading 'all-MiniLM-L6-v2'...")
+    model = SentenceTransformer("all-MiniLM-L6-v2", local_files_only=False)
+
 
 
 def embed_texts(texts):
