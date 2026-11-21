@@ -1,5 +1,8 @@
 # StartupSetu - AI-Powered Startup Guidance Platform
 
+[![CI](https://github.com/Bhorkade/Training-of-gen-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/Bhorkade/Training-of-gen-AI/actions/workflows/ci.yml)
+
+
 StartupSetu is an AI-powered platform that helps students and entrepreneurs understand startup registration, DPIIT recognition, government schemes, funding opportunities, and startup benefits in India.
 
 ## Technologies Used
@@ -153,9 +156,34 @@ RAG pipeline, API integration (`POST /ask`), and comparative evaluation complete
   - Created `.dockerignore` to keep image builds lightweight and secure.
   - Configured multi-container orchestration with `docker-compose.yml` linking the FastAPI backend (`api`) and Streamlit frontend (`ui`).
 
+### Day 12 - Continuous Integration (CI), GitHub Pull Request & Continuous Deployment (CD)
+- **Automated CI Workflow (`.github/workflows/ci.yml`):**
+  - Triggers on every push and pull request targeting `main`.
+  - Executes `ruff check .` for automated code quality and runs the full 22-test suite with `pytest -q`.
+  - **Feature Branch & PR:** Opened [Pull Request #1](https://github.com/Bhorkade/Training-of-gen-AI/pull/1) from `feat/ci-workflow-day12`.
+  - **Green CI & Merge:** Merged into `main` after verifying green CI pipeline.
+- **Continuous Deployment (CD) from `main` (`render.yaml`):**
+  - Configured multi-service deployment blueprint on Render for both API and UI.
+  - Automatically redeploys on every merge to `main`.
+
+---
+
+## Live Deployment & Tracker Information
+
+StartupSetu is deployed and accessible via public endpoints:
+
+| Component | Public Live URL | Description |
+|---|---|---|
+| **API Health Check** | [`https://startupsetu-api.onrender.com/health`](https://startupsetu-api.onrender.com/health) | Public health check returning `{"status": "healthy"}` |
+| **FastAPI Interactive Docs** | [`https://startupsetu-api.onrender.com/docs`](https://startupsetu-api.onrender.com/docs) | Interactive Swagger UI for API exploration |
+| **Streamlit Interactive UI** | [`https://startupsetu-ui.onrender.com`](https://startupsetu-ui.onrender.com) | Public live chat UI & 'Am I a startup?' evaluation form |
+| **GitHub Actions CI** | [![CI](https://github.com/Bhorkade/Training-of-gen-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/Bhorkade/Training-of-gen-AI/actions/workflows/ci.yml) | Automated build and test pipeline badge |
+| **Merged Pull Request** | [PR #1](https://github.com/Bhorkade/Training-of-gen-AI/pull/1) | Feature branch PR merged with green CI verification |
+
 ---
 
 ## Run with Docker
+
 
 StartupSetu can be launched with Docker and Docker Compose.
 
