@@ -1,6 +1,5 @@
 # StartupSetu - AI-Powered Startup Guidance Platform
 
-[![CI](https://github.com/Bhorkade/Training-of-gen-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/Bhorkade/Training-of-gen-AI/actions/workflows/ci.yml)
 
 
 StartupSetu is an AI-powered platform that helps students and entrepreneurs understand startup registration, DPIIT recognition, government schemes, funding opportunities, and startup benefits in India.
@@ -16,9 +15,7 @@ StartupSetu is an AI-powered platform that helps students and entrepreneurs unde
 - REST API
 - LangGraph
 - Streamlit
-- Pytest
-- Ruff
-- Docker & Docker Compose
+
 
 
 
@@ -138,95 +135,6 @@ RAG pipeline, API integration (`POST /ask`), and comparative evaluation complete
 
 ![StartupSetu UI Chat Screen](docs/ui_chat_screen.png)
 
-
-### Day 11 - Testing Suite, Code Quality & Docker Containerization
-- **Automated Test Suite (`tests/`):**
-  - Created 20 comprehensive automated unit and integration tests across 5 modules:
-    - `tests/test_health.py`: Verifies `GET /health` system readiness.
-    - `tests/test_records.py`: Tests data loading, pagination, and ID retrieval (including 404 handling).
-    - `tests/test_search.py`: Tests TF-IDF smart search, query matching, and parameter validation.
-    - `tests/test_rag.py`: Tests `POST /ask` with mock/fake LLM synthesis, citation extraction, and strict refusal on out-of-scope queries.
-    - `tests/test_agent.py`: Validates DPIIT eligibility evaluation logic, scheme lookup, application creation, hand-written agent loop, and LangGraph human approval step.
-  - All 20 tests pass (`pytest -q` 100% green).
-- **Code Quality & Linting:**
-  - Configured `pyproject.toml` with Ruff standards.
-  - Passed `ruff check .` with zero linting or formatting errors.
-- **Docker Containerization:**
-  - Authored production `Dockerfile` with multi-service support.
-  - Created `.dockerignore` to keep image builds lightweight and secure.
-  - Configured multi-container orchestration with `docker-compose.yml` linking the FastAPI backend (`api`) and Streamlit frontend (`ui`).
-
-### Day 12 - Continuous Integration (CI), GitHub Pull Request & Continuous Deployment (CD)
-- **Automated CI Workflow (`.github/workflows/ci.yml`):**
-  - Triggers on every push and pull request targeting `main`.
-  - Executes `ruff check .` for automated code quality and runs the full 22-test suite with `pytest -q`.
-  - **Feature Branch & PR:** Opened [Pull Request #1](https://github.com/Bhorkade/Training-of-gen-AI/pull/1) from `feat/ci-workflow-day12`.
-  - **Green CI & Merge:** Merged into `main` after verifying green CI pipeline.
-- **Continuous Deployment (CD) from `main` (`render.yaml`):**
-  - Configured multi-service deployment blueprint on Render for both API and UI.
-  - Automatically redeploys on every merge to `main`.
-
----
-
-## Live Deployment & Tracker Information
-
-StartupSetu is deployed and accessible via public endpoints:
-
-| Component | Public Live URL | Description |
-|---|---|---|
-| **API Health Check** | [`https://startupsetu-api.onrender.com/health`](https://startupsetu-api.onrender.com/health) | Public health check returning `{"status": "healthy"}` |
-| **FastAPI Interactive Docs** | [`https://startupsetu-api.onrender.com/docs`](https://startupsetu-api.onrender.com/docs) | Interactive Swagger UI for API exploration |
-| **Streamlit Interactive UI** | [`https://startupsetu-ui.onrender.com`](https://startupsetu-ui.onrender.com) | Public live chat UI & 'Am I a startup?' evaluation form |
-| **GitHub Actions CI** | [![CI](https://github.com/Bhorkade/Training-of-gen-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/Bhorkade/Training-of-gen-AI/actions/workflows/ci.yml) | Automated build and test pipeline badge |
-| **Merged Pull Request** | [PR #1](https://github.com/Bhorkade/Training-of-gen-AI/pull/1) | Feature branch PR merged with green CI verification |
-
----
-
-## Run with Docker
-
-
-StartupSetu can be launched with Docker and Docker Compose.
-
-### 1. Prerequisites
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
-- A valid Gemini API Key (set in `.env`).
-
-### 2. Configure Environment
-Create or edit your `.env` file in the project root:
-```env
-GEMINI_API_KEY=your_actual_gemini_api_key_here
-GEMINI_MODEL=gemini-3.8-flash
-```
-
-### 3. Build and Start Services
-Run the following command from the project root:
-```bash
-docker compose up --build
-```
-
-To run in detached mode (background):
-```bash
-docker compose up -d --build
-```
-
-### 4. Access the Application
-Once running, the following services are available:
-
-| Service | URL | Description |
-|---|---|---|
-| **Streamlit Interactive UI** | [http://localhost:8501](http://localhost:8501) | Full chat UI with dual modes, citations, approval buttons, and feedback. |
-| **FastAPI Interactive Docs (Swagger)** | [http://localhost:8000/docs](http://localhost:8000/docs) | Interactive OpenAPI documentation for all endpoints. |
-| **API Health Check** | [http://localhost:8000/health](http://localhost:8000/health) | System health and readiness verification. |
-| **RAG Query Endpoint** | `POST http://localhost:8000/ask` | Direct RAG queries with citations and refusal filters. |
-| **LangGraph Agent Endpoint** | `POST http://localhost:8000/agent` | Autonomous agent with memory and human-in-the-loop approval. |
-
-### 5. Stopping the Containers
-To stop and remove containers and networks:
-```bash
-docker compose down
-```
-
----
-
 ## Developer
 Shrikar Bhorkade
+
