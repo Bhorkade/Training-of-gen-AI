@@ -19,6 +19,21 @@ UNANSWERABLE_PATTERNS = [
     "lunar exploration",
 ]
 
+# Prompt injection and adversarial jailbreak patterns requiring strict refusal
+PROMPT_INJECTION_PATTERNS = [
+    "ignore previous instructions",
+    "ignore all instructions",
+    "ignore all rules",
+    "system override",
+    "override previous instructions",
+    "disregard previous instructions",
+    "jailbreak",
+    "print internal prompts",
+    "reveal internal instructions",
+    "reveal internal prompts",
+    "bypass safety",
+]
+
 
 def retrieve_chunks(query: str, top_k: int = 3, min_score: float = 0.45) -> list[dict[str, Any]]:
     """
@@ -114,8 +129,17 @@ def rag_answer(
     cleaned_question = question.strip()
     q_lower = cleaned_question.lower()
 
-    # Step 1: Check known out-of-scope / unanswerable intent
+    # Step 1: Check known prompt injection & out-of-scope / unanswerable intent
     if strict_refusal:
+        for pattern in PROMPT_INJECTION_PATTERNS:
+            if pattern in q_lower:
+                return {
+                    "question": cleaned_question,
+                    "answer": REFUSAL_MESSAGE,
+                    "citations": [],
+                    "refused": True,
+                    "retrieved_chunks": []
+                }
         for pattern in UNANSWERABLE_PATTERNS:
             if pattern in q_lower:
                 return {

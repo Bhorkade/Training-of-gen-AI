@@ -1,5 +1,8 @@
 import json
+import logging
+import time
 from pathlib import Path
+from typing import Any
 
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
@@ -11,6 +14,20 @@ from app.records import get_by_id, load_records
 from app.smart_search import smart_search
 from app.tools import check_dpiit_eligibility
 from app.vectorstore import semantic_search as vector_semantic_search
+
+# --------------------------------------------------
+# LOGGING CONFIGURATION & IN-MEMORY CACHE
+# --------------------------------------------------
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+)
+logger = logging.getLogger("startupsetu")
+
+# In-memory query cache for RAG /ask endpoint: {(normalized_query, top_k): response_data}
+ASK_CACHE: dict[tuple[str, int], dict[str, Any]] = {}
+MAX_INPUT_LENGTH = 500
 
 # --------------------------------------------------
 # APPLICATION CONFIGURATION
@@ -361,7 +378,7 @@ Instructions:
 
 @app.post("/ask")
 def ask(request: AskRequest):
-
+    start_time = time.perf_counter()
     q = (request.question or request.query or "").strip()
 
     if not q:
@@ -370,11 +387,71 @@ def ask(request: AskRequest):
             detail="Question cannot be empty"
         )
 
+    if len(q) > MAX_INPUT_LENGTH:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Query exceeds maximum allowed length of {MAX_INPUT_LENGTH} characters"
+        )
+
+    cache_key = (q.lower(), request.top_k)
+
+    if cache_key in ASK_CACHE:
+        cached_result = ASK_CACHE[cache_key]
+        latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
+        prompt_tokens = max(1, len(q) // 4)
+        completion_tokens = max(1, len(str(cached_result.get("answer", ""))) // 4)
+        total_tokens = prompt_tokens + completion_tokens
+
+        logger.info(
+            "[/ask] query='%s' latency_ms=%.2f prompt_tokens=%d completion_tokens=%d total_tokens=%d cached=True",
+            q[:40],
+            latency_ms,
+            prompt_tokens,
+            completion_tokens,
+            total_tokens,
+        )
+
+        response_data = dict(cached_result)
+        response_data["metrics"] = {
+            "latency_ms": latency_ms,
+            "prompt_tokens": prompt_tokens,
+            "completion_tokens": completion_tokens,
+            "total_tokens": total_tokens,
+            "cached": True
+        }
+        return response_data
+
     try:
         response = rag_answer(
             question=q,
             top_k=request.top_k
         )
+        latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
+        prompt_tokens = max(1, len(q) // 4)
+        completion_tokens = max(1, len(str(response.get("answer", ""))) // 4)
+        total_tokens = prompt_tokens + completion_tokens
+
+        logger.info(
+            "[/ask] query='%s' latency_ms=%.2f prompt_tokens=%d completion_tokens=%d total_tokens=%d cached=False",
+            q[:40],
+            latency_ms,
+            prompt_tokens,
+            completion_tokens,
+            total_tokens,
+        )
+
+        if len(ASK_CACHE) >= 128:
+            oldest_key = next(iter(ASK_CACHE))
+            del ASK_CACHE[oldest_key]
+
+        response["metrics"] = {
+            "latency_ms": latency_ms,
+            "prompt_tokens": prompt_tokens,
+            "completion_tokens": completion_tokens,
+            "total_tokens": total_tokens,
+            "cached": False
+        }
+        ASK_CACHE[cache_key] = dict(response)
         return response
 
     except Exception as error:
