@@ -12,6 +12,7 @@ Features:
 """
 
 import json
+import os
 import sys
 import time
 from datetime import datetime
@@ -27,7 +28,9 @@ if str(BASE_DIR) not in sys.path:
 
 FEEDBACK_FILE = BASE_DIR / "data" / "feedback.json"
 DEFAULT_LOCAL_URL = "http://127.0.0.1:8000"
-DEFAULT_CLOUD_URL = "https://startupsetu-api.onrender.com"
+ENV_API_URL = os.getenv("API_URL", "").strip()
+DEFAULT_CLOUD_URL = ENV_API_URL or "https://startupsetu-api.onrender.com"
+IS_CLOUD_ENV = bool(os.getenv("RENDER") or os.getenv("RENDER_SERVICE_ID") or ENV_API_URL)
 
 # --------------------------------------------------
 # PAGE CONFIGURATION
@@ -137,24 +140,40 @@ st.markdown("""
 
     /* Status Pill */
     .status-badge-online {
-        display: inline-block;
-        padding: 0.25rem 0.65rem;
-        border-radius: 9999px;
-        font-size: 0.8rem;
+        display: block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.82rem;
         font-weight: 600;
         background: #DCFCE7;
         color: #15803D;
         border: 1px solid #86EFAC;
+        margin-bottom: 0.4rem;
+        text-align: center;
     }
-    .status-badge-standalone {
-        display: inline-block;
-        padding: 0.25rem 0.65rem;
-        border-radius: 9999px;
-        font-size: 0.8rem;
+    .status-badge-offline {
+        display: block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.82rem;
         font-weight: 600;
         background: #FEF3C7;
-        color: #B45309;
-        border: 1px solid #FDE68A;
+        color: #92400E;
+        border: 1px solid #FCD34D;
+        margin-bottom: 0.4rem;
+        text-align: center;
+    }
+    .status-badge-standalone {
+        display: block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        background: #F1F5F9;
+        color: #334155;
+        border: 1px solid #CBD5E1;
+        margin-bottom: 0.4rem;
+        text-align: center;
     }
 
     /* Engine Tag in Chat */
@@ -220,12 +239,13 @@ def save_feedback(
 # --------------------------------------------------
 # RESILIENT API CALLERS WITH ZERO-DOWNTIME FALLBACKS
 # --------------------------------------------------
+@st.cache_data(ttl=10, show_spinner=False)
 def check_api_health(api_url_str: str) -> bool:
     """Check if the backend FastAPI service is reachable."""
     if not api_url_str or "direct" in api_url_str.lower():
         return False
     try:
-        r = requests.get(f"{api_url_str.rstrip('/')}/health", timeout=1.5)
+        r = requests.get(f"{api_url_str.rstrip('/')}/health", timeout=2.5)
         return r.status_code == 200
     except Exception:
         return False
@@ -233,18 +253,18 @@ def check_api_health(api_url_str: str) -> bool:
 
 def call_ask_api(api_url_str: str, question: str) -> dict[str, Any]:
     """
-    Call the RAG endpoint POST /ask with automatic in-process fallback.
-    Never throws a connection error.
+    Call the RAG endpoint POST /ask with automatic cloud fallback and in-process resilience.
+    Never crashes with an unhandled exception.
     """
     start_t = time.perf_counter()
 
-    # 1. Try FastAPI endpoint if configured and reachable
+    # 1. Try configured FastAPI endpoint if reachable
     if api_url_str and not api_url_str.lower().startswith("direct"):
         try:
             r = requests.post(
                 f"{api_url_str.rstrip('/')}/ask",
                 json={"question": question, "top_k": 3},
-                timeout=8
+                timeout=35
             )
             if r.status_code == 200:
                 data = r.json()
@@ -255,27 +275,62 @@ def call_ask_api(api_url_str: str, question: str) -> dict[str, Any]:
                     "metrics": data.get("metrics", {"latency_ms": latency}),
                     "status": "completed",
                     "requires_approval": False,
-                    "engine": "FastAPI Web Service"
+                    "engine": f"FastAPI ({api_url_str})"
                 }
         except Exception:
-            pass  # Seamless fallback to in-process engine
+            pass  # Seamless fallback to in-process or cloud fallback
 
     # 2. Resilient In-Process Direct RAG Execution
-    from app.rag import rag_answer
-    data = rag_answer(question=question, top_k=3)
-    latency = round((time.perf_counter() - start_t) * 1000, 2)
-    return {
-        "response": data.get("answer", ""),
-        "citations": data.get("citations", []),
-        "metrics": {
-            "latency_ms": latency,
-            "cached": False,
-            "in_process": True
-        },
-        "status": "completed",
-        "requires_approval": False,
-        "engine": "Direct In-Process RAG Engine"
-    }
+    try:
+        from app.rag import rag_answer
+        data = rag_answer(question=question, top_k=3)
+        latency = round((time.perf_counter() - start_t) * 1000, 2)
+        return {
+            "response": data.get("answer", ""),
+            "citations": data.get("citations", []),
+            "metrics": {
+                "latency_ms": latency,
+                "cached": False,
+                "in_process": True
+            },
+            "status": "completed",
+            "requires_approval": False,
+            "engine": "Direct In-Process RAG Engine"
+        }
+    except (ImportError, ModuleNotFoundError) as err:
+        # 3. If in-process packages are missing (e.g. lightweight UI container), attempt cloud fallback
+        if api_url_str != DEFAULT_CLOUD_URL:
+            try:
+                r = requests.post(
+                    f"{DEFAULT_CLOUD_URL.rstrip('/')}/ask",
+                    json={"question": question, "top_k": 3},
+                    timeout=35
+                )
+                if r.status_code == 200:
+                    data = r.json()
+                    latency = round((time.perf_counter() - start_t) * 1000, 2)
+                    return {
+                        "response": data.get("answer", ""),
+                        "citations": data.get("citations", []),
+                        "metrics": data.get("metrics", {"latency_ms": latency}),
+                        "status": "completed",
+                        "requires_approval": False,
+                        "engine": f"Cloud API Fallback ({DEFAULT_CLOUD_URL})"
+                    }
+            except Exception:
+                pass
+        return {
+            "response": (
+                f"⚠️ **Backend Offline / Waking Up**: The backend API at `{api_url_str or DEFAULT_CLOUD_URL}` "
+                f"is currently waking up from sleep, and direct in-process engine is missing local dependencies ({err}). "
+                "Please allow ~30 seconds for the cloud server to spin up and click **'🔄 Test / Ping Connection'** in the sidebar."
+            ),
+            "citations": [],
+            "metrics": {"latency_ms": 0.0},
+            "status": "error",
+            "requires_approval": False,
+            "engine": "Resilience Safe Handler"
+        }
 
 
 def call_agent_api(
@@ -285,8 +340,8 @@ def call_agent_api(
     approved: bool | None = None
 ) -> dict[str, Any]:
     """
-    Call the LangGraph Agent endpoint POST /agent with automatic in-process fallback.
-    Never throws a connection error.
+    Call the LangGraph Agent endpoint POST /agent with automatic fallback.
+    Never throws an unhandled exception or module error.
     """
     # 1. Try FastAPI endpoint if reachable
     if api_url_str and not api_url_str.lower().startswith("direct"):
@@ -300,24 +355,56 @@ def call_agent_api(
             r = requests.post(
                 f"{api_url_str.rstrip('/')}/agent",
                 json=payload,
-                timeout=12
+                timeout=40
             )
             if r.status_code == 200:
                 res = r.json()
-                res["engine"] = "FastAPI Web Service"
+                res["engine"] = f"FastAPI ({api_url_str})"
                 return res
         except Exception:
             pass  # Seamless fallback
 
     # 2. Resilient In-Process Direct LangGraph Execution
-    from app.graph import run_graph_agent
-    res = run_graph_agent(
-        query=query,
-        thread_id=thread_id,
-        approved=approved
-    )
-    res["engine"] = "Direct In-Process LangGraph Engine"
-    return res
+    try:
+        from app.graph import run_graph_agent
+        res = run_graph_agent(
+            query=query,
+            thread_id=thread_id,
+            approved=approved
+        )
+        res["engine"] = "Direct In-Process LangGraph Engine"
+        return res
+    except (ImportError, ModuleNotFoundError) as err:
+        # 3. If in-process packages are missing (e.g. lightweight UI container), attempt cloud fallback
+        if api_url_str != DEFAULT_CLOUD_URL:
+            try:
+                payload = {"query": query}
+                if thread_id:
+                    payload["thread_id"] = thread_id
+                if approved is not None:
+                    payload["approved"] = approved
+                r = requests.post(
+                    f"{DEFAULT_CLOUD_URL.rstrip('/')}/agent",
+                    json=payload,
+                    timeout=40
+                )
+                if r.status_code == 200:
+                    res = r.json()
+                    res["engine"] = f"Cloud API Fallback ({DEFAULT_CLOUD_URL})"
+                    return res
+            except Exception:
+                pass
+        return {
+            "response": (
+                f"⚠️ **Backend Offline / Waking Up**: The backend API at `{api_url_str or DEFAULT_CLOUD_URL}` "
+                f"is currently waking up from sleep, and direct in-process engine is missing local dependencies ({err}). "
+                "Please allow ~30 seconds for the cloud server to spin up and click **'🔄 Test / Ping Connection'** in the sidebar."
+            ),
+            "citations": [],
+            "status": "error",
+            "requires_approval": False,
+            "engine": "Resilience Safe Handler"
+        }
 
 
 def call_check_eligibility(
@@ -338,20 +425,83 @@ def call_check_eligibility(
                     "annual_turnover_cr": turnover_cr,
                     "is_innovative": is_innovative
                 },
-                timeout=5
+                timeout=25
             )
             if r.status_code == 200:
                 return r.json()
         except Exception:
             pass
 
-    from app.tools import check_dpiit_eligibility
-    return check_dpiit_eligibility(
-        entity_type=entity_type,
-        incorporation_date=incorporation_date,
-        annual_turnover_cr=turnover_cr,
-        is_innovative=is_innovative
-    )
+    try:
+        from app.tools import check_dpiit_eligibility
+        return check_dpiit_eligibility(
+            entity_type=entity_type,
+            incorporation_date=incorporation_date,
+            annual_turnover_cr=turnover_cr,
+            is_innovative=is_innovative
+        )
+    except (ImportError, ModuleNotFoundError):
+        # Deterministic statutory fallback based directly on Gazette Notification G.S.R. 127(E)
+        valid_types = [
+            "Private Limited Company",
+            "Limited Liability Partnership (LLP)",
+            "Registered Partnership Firm"
+        ]
+        is_type_valid = any(vt.lower() in entity_type.lower() for vt in valid_types)
+        try:
+            inc_dt = datetime.strptime(incorporation_date, "%Y-%m-%d").date()
+            today = datetime.now().date()
+            years_active = (today - inc_dt).days / 365.25
+            is_age_valid = years_active <= 10.0
+        except Exception:
+            years_active = 0.0
+            is_age_valid = True
+
+        is_turnover_valid = turnover_cr <= 100.0
+        is_all_valid = is_type_valid and is_age_valid and is_turnover_valid and is_innovative
+
+        reasons = []
+        if not is_type_valid:
+            reasons.append(f"Entity type '{entity_type}' is ineligible. Must be Private Limited Company, LLP, or Registered Partnership.")
+        if not is_age_valid:
+            reasons.append(f"Entity age ({years_active:.1f} years) exceeds statutory maximum of 10 years.")
+        if not is_turnover_valid:
+            reasons.append(f"Annual turnover (₹{turnover_cr} Cr) exceeds statutory threshold of ₹100 Crore.")
+        if not is_innovative:
+            reasons.append("Entity must be working towards innovation, development, or deployment of products/services/processes.")
+
+        return {
+            "is_eligible": is_all_valid,
+            "entity_type": entity_type,
+            "years_active": round(years_active, 1),
+            "reasons": reasons if not is_all_valid else ["All statutory criteria satisfied under G.S.R. 127(E)."],
+            "criteria": {
+                "entity_type_valid": is_type_valid,
+                "age_under_10_years": is_age_valid,
+                "turnover_under_100cr": is_turnover_valid,
+                "innovative_scalable": is_innovative
+            },
+            "cited_rule": {
+                "notification": "DPIIT, Ministry of Commerce and Industry",
+                "title": "DPIIT Startup Recognition Definition",
+                "gazette_no": "G.S.R. 127(E)",
+                "source_url": "https://www.startupindia.gov.in/",
+                "rules": [
+                    "Entity must be Private Limited Company, LLP, or Registered Partnership Firm.",
+                    "Period of existence must not exceed 10 years from incorporation date.",
+                    "Turnover for any financial year since incorporation must not exceed ₹100 Crore.",
+                    "Entity must work towards innovation, development, or deployment of products/services/processes."
+                ]
+            },
+            "summary": "Statutorily eligible for official DPIIT Startup Recognition." if is_all_valid else "Not currently eligible for recognition under Gazette Notification G.S.R. 127(E).",
+            "recommended_benefits": [
+                "Section 80-IAC 3-Year Income Tax Exemption (post IMB approval)",
+                "Section 56(2)(viib) 'Angel Tax' exemption under Form-2",
+                "80% rebate on Patent applications and 50% rebate on Trademark filings",
+                "Exemption from Prior Turnover and Prior Experience in Public Procurement",
+                "Direct eligibility for Startup India Seed Fund Scheme (SISFS)"
+            ] if is_all_valid else []
+        }
 
 
 # --------------------------------------------------
@@ -374,42 +524,64 @@ with st.sidebar:
     st.markdown("### ⚙️ System Control")
 
     # Backend Connection Mode Selector
+    if IS_CLOUD_ENV:
+        profile_options = [
+            f"Live Cloud API ({DEFAULT_CLOUD_URL})",
+            "Localhost API (http://127.0.0.1:8000)",
+            "Direct Engine (Standalone / In-Process)",
+            "Custom URL"
+        ]
+        default_idx = 0
+    else:
+        profile_options = [
+            "Localhost API (http://127.0.0.1:8000)",
+            f"Live Cloud API ({DEFAULT_CLOUD_URL})",
+            "Direct Engine (Standalone / In-Process)",
+            "Custom URL"
+        ]
+        default_idx = 0
+
     env_choice = st.selectbox(
         "Connection Profile",
-        options=[
-            "Direct Engine (Standalone / In-Process)",
-            "Localhost (http://127.0.0.1:8000)",
-            "Live Cloud API (Render)",
-            "Custom URL"
-        ],
-        index=0,
-        help="Select whether to use the local FastAPI server, public cloud API, or embedded direct Python engine."
+        options=profile_options,
+        index=default_idx,
+        help="Select whether to use the live Cloud API, local FastAPI server, or embedded direct Python engine."
     )
 
-    if env_choice == "Direct Engine (Standalone / In-Process)":
-        api_url = "direct"
-        is_online = False
-    elif env_choice == "Localhost (http://127.0.0.1:8000)":
-        api_url = DEFAULT_LOCAL_URL
-        is_online = check_api_health(api_url)
-    elif env_choice == "Live Cloud API (Render)":
+    if env_choice.startswith("Live Cloud API"):
         api_url = DEFAULT_CLOUD_URL
         is_online = check_api_health(api_url)
+    elif env_choice.startswith("Localhost API"):
+        api_url = DEFAULT_LOCAL_URL
+        is_online = check_api_health(api_url)
+    elif env_choice == "Direct Engine (Standalone / In-Process)":
+        api_url = "direct"
+        is_online = False
     else:
         api_url = st.text_input("Custom API URL", value=DEFAULT_LOCAL_URL)
         is_online = check_api_health(api_url)
 
     # Status Display Badge
-    if is_online:
+    if api_url == "direct":
         st.markdown(
-            f'<div class="status-badge-online">🟢 FastAPI Online ({api_url})</div>',
+            '<div class="status-badge-standalone">⚡ Direct Python Engine (Local In-Process)</div>',
+            unsafe_allow_html=True
+        )
+    elif is_online:
+        st.markdown(
+            f'<div class="status-badge-online">🟢 API Connected: {api_url}</div>',
             unsafe_allow_html=True
         )
     else:
         st.markdown(
-            '<div class="status-badge-standalone">⚡ Direct Python Engine (Always Ready)</div>',
+            f'<div class="status-badge-offline">🟡 API Offline / Waking Up: {api_url}</div>',
             unsafe_allow_html=True
         )
+        st.caption("ℹ️ Cloud backends sleep after inactivity (~30s to wake up).")
+
+    if st.button("🔄 Test / Ping Connection", use_container_width=True, key="ping_btn"):
+        check_api_health.clear()
+        st.rerun()
 
     st.markdown("---")
 
@@ -655,6 +827,28 @@ with tab_chat:
         "Ask questions regarding Indian startup registration, statutory exemptions, Seed Fund schemes, and policy definitions. "
         "Every response is strictly grounded with verifiable government citations."
     )
+
+    # Quick Prompts
+    st.markdown("##### ⚡ Quick Queries:")
+    q_col1, q_col2, q_col3, q_col4 = st.columns(4)
+    with q_col1:
+        if st.button("🏛️ DPIIT 10-Yr Rule", key="chip_dpiit", use_container_width=True):
+            st.session_state["queued_prompt"] = "How long is a company eligible to be recognized as a startup under DPIIT?"
+            st.rerun()
+    with q_col2:
+        if st.button("💰 Seed Fund Scheme", key="chip_seed", use_container_width=True):
+            st.session_state["queued_prompt"] = "What is the Startup India Seed Fund Scheme?"
+            st.rerun()
+    with q_col3:
+        if st.button("⚖️ 80-IAC Tax Exemption", key="chip_tax", use_container_width=True):
+            st.session_state["queued_prompt"] = "What is the income tax exemption under Section 80-IAC?"
+            st.rerun()
+    with q_col4:
+        if st.button("📝 Register Application", key="chip_reg", use_container_width=True):
+            st.session_state["queued_prompt"] = "Please submit my application for startup registration: TechSetu Solutions Pvt Ltd"
+            st.rerun()
+
+    st.markdown("---")
 
     # Render Chat History
     for idx, msg in enumerate(st.session_state.messages):
