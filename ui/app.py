@@ -1,18 +1,19 @@
 """
-StartupSetu AI Assistant - Interactive Chat UI & Eligibility Assessment
-Built with Streamlit for Day 10.
+StartupSetu AI Platform - Interactive Chat UI & Eligibility Assessment
+Built with Streamlit.
 Features:
 - 'Am I a startup?' st.form: Direct evaluation of Entity Type, Incorporation Date, Turnover, and Innovation.
 - Result display with the cited DPIIT statutory rule (Notification G.S.R. 127(E)).
 - Dual Mode Chat: Direct RAG (/ask) and LangGraph Autonomous Agent (/agent).
+- Zero-Downtime Architecture: Automatic in-process fallback when FastAPI backend is not running.
 - Verified Citations display with official government sources and pages.
 - Human-in-the-loop Action Approval buttons (Approve / Reject).
 - Thumbs Up / Down user feedback mechanism saved to data/feedback.json.
 """
 
 import json
-import os
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -25,52 +26,163 @@ if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
 FEEDBACK_FILE = BASE_DIR / "data" / "feedback.json"
-DEFAULT_API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
+DEFAULT_LOCAL_URL = "http://127.0.0.1:8000"
+DEFAULT_CLOUD_URL = "https://startupsetu-api.onrender.com"
 
-# Page Configuration
+# --------------------------------------------------
+# PAGE CONFIGURATION
+# --------------------------------------------------
 st.set_page_config(
-    page_title="StartupSetu AI - DPIIT Startup Assistant",
-    page_icon="🚀",
+    page_title="StartupSetu AI — DPIIT Startup Advisory Platform",
+    page_icon="🇮🇳",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom Styling
+# --------------------------------------------------
+# CUSTOM CSS STYLING
+# --------------------------------------------------
 st.markdown("""
 <style>
-    .main-header {
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: #1E3A8A;
-        margin-bottom: 0.2rem;
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+    html, body, [class*="css"] {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
-    .sub-header {
-        font-size: 1.05rem;
-        color: #475569;
-        margin-bottom: 1.5rem;
+
+    /* Hero Banner */
+    .hero-container {
+        background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #1E3A8A 100%);
+        border-radius: 16px;
+        padding: 2rem 2.2rem;
+        color: white;
+        margin-bottom: 1.8rem;
+        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.4);
+        color: #FCD34D;
+        padding: 0.35rem 0.85rem;
+        border-radius: 9999px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+    }
+    .hero-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(90deg, #FFFFFF 0%, #E2E8F0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+        font-size: 1.02rem;
+        color: #94A3B8;
+        max-width: 850px;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Cards & Components */
+    .glass-card {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
     .citation-card {
-        background-color: #F8FAFC;
-        border-left: 4px solid #3B82F6;
-        padding: 0.8rem 1rem;
+        background: #F8FAFC;
+        border-left: 4px solid #2563EB;
+        padding: 0.85rem 1.1rem;
         margin-top: 0.6rem;
-        border-radius: 4px;
-        font-size: 0.9rem;
-        line-height: 1.6;
+        border-radius: 6px;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        border: 1px solid #E2E8F0;
+        border-left-width: 4px;
+    }
+    .citation-card a {
+        color: #2563EB;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    .citation-card a:hover {
+        text-decoration: underline;
     }
     .rule-card {
-        background-color: #EFF6FF;
-        border-left: 4px solid #1D4ED8;
-        padding: 1rem;
-        margin-top: 0.8rem;
-        border-radius: 6px;
+        background: #EFF6FF;
+        border: 1px solid #BFDBFE;
+        border-left: 5px solid #1D4ED8;
+        padding: 1.2rem;
+        margin-top: 1rem;
+        border-radius: 10px;
         font-size: 0.92rem;
-        line-height: 1.6;
+        line-height: 1.65;
+        color: #1E293B;
+    }
+    .rule-card b {
+        color: #0F172A;
+    }
+
+    /* Status Pill */
+    .status-badge-online {
+        display: inline-block;
+        padding: 0.25rem 0.65rem;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: #DCFCE7;
+        color: #15803D;
+        border: 1px solid #86EFAC;
+    }
+    .status-badge-standalone {
+        display: inline-block;
+        padding: 0.25rem 0.65rem;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: #FEF3C7;
+        color: #B45309;
+        border: 1px solid #FDE68A;
+    }
+
+    /* Engine Tag in Chat */
+    .engine-tag {
+        font-size: 0.75rem;
+        color: #64748B;
+        margin-top: 0.35rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    /* Form styling */
+    .stButton>button {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+    .stButton>button:hover {
+        transform: translateY(-1px);
     }
 </style>
 """, unsafe_allow_html=True)
 
 
+# --------------------------------------------------
+# FEEDBACK PERSISTENCE
+# --------------------------------------------------
 def save_feedback(
     question: str,
     answer: str,
@@ -105,29 +217,64 @@ def save_feedback(
     return True
 
 
+# --------------------------------------------------
+# RESILIENT API CALLERS WITH ZERO-DOWNTIME FALLBACKS
+# --------------------------------------------------
 def check_api_health(api_url_str: str) -> bool:
     """Check if the backend FastAPI service is reachable."""
+    if not api_url_str or "direct" in api_url_str.lower():
+        return False
     try:
-        r = requests.get(f"{api_url_str}/health", timeout=2)
+        r = requests.get(f"{api_url_str.rstrip('/')}/health", timeout=1.5)
         return r.status_code == 200
     except Exception:
         return False
 
 
 def call_ask_api(api_url_str: str, question: str) -> dict[str, Any]:
-    """Call the RAG endpoint POST /ask."""
-    r = requests.post(
-        f"{api_url_str}/ask",
-        json={"question": question, "top_k": 3},
-        timeout=30
-    )
-    r.raise_for_status()
-    data = r.json()
+    """
+    Call the RAG endpoint POST /ask with automatic in-process fallback.
+    Never throws a connection error.
+    """
+    start_t = time.perf_counter()
+
+    # 1. Try FastAPI endpoint if configured and reachable
+    if api_url_str and not api_url_str.lower().startswith("direct"):
+        try:
+            r = requests.post(
+                f"{api_url_str.rstrip('/')}/ask",
+                json={"question": question, "top_k": 3},
+                timeout=8
+            )
+            if r.status_code == 200:
+                data = r.json()
+                latency = round((time.perf_counter() - start_t) * 1000, 2)
+                return {
+                    "response": data.get("answer", ""),
+                    "citations": data.get("citations", []),
+                    "metrics": data.get("metrics", {"latency_ms": latency}),
+                    "status": "completed",
+                    "requires_approval": False,
+                    "engine": "FastAPI Web Service"
+                }
+        except Exception:
+            pass  # Seamless fallback to in-process engine
+
+    # 2. Resilient In-Process Direct RAG Execution
+    from app.rag import rag_answer
+    data = rag_answer(question=question, top_k=3)
+    latency = round((time.perf_counter() - start_t) * 1000, 2)
     return {
         "response": data.get("answer", ""),
         "citations": data.get("citations", []),
+        "metrics": {
+            "latency_ms": latency,
+            "cached": False,
+            "in_process": True
+        },
         "status": "completed",
-        "requires_approval": False
+        "requires_approval": False,
+        "engine": "Direct In-Process RAG Engine"
     }
 
 
@@ -137,16 +284,40 @@ def call_agent_api(
     thread_id: str | None = None,
     approved: bool | None = None
 ) -> dict[str, Any]:
-    """Call the LangGraph Agent endpoint POST /agent."""
-    payload: dict[str, Any] = {"query": query}
-    if thread_id:
-        payload["thread_id"] = thread_id
-    if approved is not None:
-        payload["approved"] = approved
+    """
+    Call the LangGraph Agent endpoint POST /agent with automatic in-process fallback.
+    Never throws a connection error.
+    """
+    # 1. Try FastAPI endpoint if reachable
+    if api_url_str and not api_url_str.lower().startswith("direct"):
+        try:
+            payload: dict[str, Any] = {"query": query}
+            if thread_id:
+                payload["thread_id"] = thread_id
+            if approved is not None:
+                payload["approved"] = approved
 
-    r = requests.post(f"{api_url_str}/agent", json=payload, timeout=30)
-    r.raise_for_status()
-    return r.json()
+            r = requests.post(
+                f"{api_url_str.rstrip('/')}/agent",
+                json=payload,
+                timeout=12
+            )
+            if r.status_code == 200:
+                res = r.json()
+                res["engine"] = "FastAPI Web Service"
+                return res
+        except Exception:
+            pass  # Seamless fallback
+
+    # 2. Resilient In-Process Direct LangGraph Execution
+    from app.graph import run_graph_agent
+    res = run_graph_agent(
+        query=query,
+        thread_id=thread_id,
+        approved=approved
+    )
+    res["engine"] = "Direct In-Process LangGraph Engine"
+    return res
 
 
 def call_check_eligibility(
@@ -157,21 +328,22 @@ def call_check_eligibility(
     is_innovative: bool
 ) -> dict[str, Any]:
     """Call POST /eligibility or fallback directly to check_dpiit_eligibility tool."""
-    try:
-        r = requests.post(
-            f"{api_url_str}/eligibility",
-            json={
-                "entity_type": entity_type,
-                "incorporation_date": incorporation_date,
-                "annual_turnover_cr": turnover_cr,
-                "is_innovative": is_innovative
-            },
-            timeout=10
-        )
-        if r.status_code == 200:
-            return r.json()
-    except Exception:
-        pass
+    if api_url_str and not api_url_str.lower().startswith("direct"):
+        try:
+            r = requests.post(
+                f"{api_url_str.rstrip('/')}/eligibility",
+                json={
+                    "entity_type": entity_type,
+                    "incorporation_date": incorporation_date,
+                    "annual_turnover_cr": turnover_cr,
+                    "is_innovative": is_innovative
+                },
+                timeout=5
+            )
+            if r.status_code == 200:
+                return r.json()
+        except Exception:
+            pass
 
     from app.tools import check_dpiit_eligibility
     return check_dpiit_eligibility(
@@ -182,7 +354,9 @@ def call_check_eligibility(
     )
 
 
-# Initialize Session State
+# --------------------------------------------------
+# SESSION STATE INITIALIZATION
+# --------------------------------------------------
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "thread_id" not in st.session_state:
@@ -192,38 +366,96 @@ if "pending_approval" not in st.session_state:
 if "feedback_submitted" not in st.session_state:
     st.session_state.feedback_submitted = set()
 
-# Sidebar Configuration
-with st.sidebar:
-    st.title("⚙️ System Control")
-    api_url = st.text_input("Backend API URL", value=DEFAULT_API_URL)
 
-    is_online = check_api_health(api_url)
-    if is_online:
-        st.success("● API Online (FastAPI)")
+# --------------------------------------------------
+# SIDEBAR CONFIGURATION
+# --------------------------------------------------
+with st.sidebar:
+    st.markdown("### ⚙️ System Control")
+
+    # Backend Connection Mode Selector
+    env_choice = st.selectbox(
+        "Connection Profile",
+        options=[
+            "Direct Engine (Standalone / In-Process)",
+            "Localhost (http://127.0.0.1:8000)",
+            "Live Cloud API (Render)",
+            "Custom URL"
+        ],
+        index=0,
+        help="Select whether to use the local FastAPI server, public cloud API, or embedded direct Python engine."
+    )
+
+    if env_choice == "Direct Engine (Standalone / In-Process)":
+        api_url = "direct"
+        is_online = False
+    elif env_choice == "Localhost (http://127.0.0.1:8000)":
+        api_url = DEFAULT_LOCAL_URL
+        is_online = check_api_health(api_url)
+    elif env_choice == "Live Cloud API (Render)":
+        api_url = DEFAULT_CLOUD_URL
+        is_online = check_api_health(api_url)
     else:
-        st.warning("○ API Offline - Running with local direct fallback")
+        api_url = st.text_input("Custom API URL", value=DEFAULT_LOCAL_URL)
+        is_online = check_api_health(api_url)
+
+    # Status Display Badge
+    if is_online:
+        st.markdown(
+            f'<div class="status-badge-online">🟢 FastAPI Online ({api_url})</div>',
+            unsafe_allow_html=True
+        )
+    else:
+        st.markdown(
+            '<div class="status-badge-standalone">⚡ Direct Python Engine (Always Ready)</div>',
+            unsafe_allow_html=True
+        )
 
     st.markdown("---")
+
+    # Processing Engine Selector
     endpoint_mode = st.radio(
         "Select Processing Engine:",
-        options=["LangGraph Agent (/agent)", "Direct RAG Pipeline (/ask)"],
+        options=[
+            "LangGraph Agent (/agent)",
+            "Direct RAG Pipeline (/ask)"
+        ],
         index=0,
-        help="Choose between autonomous LangGraph agent with tool invocation and approval, or direct RAG document retrieval."
+        help="LangGraph Agent handles multi-turn memory, statutory tools, and HITL approvals. Direct RAG focuses on verified citations and strict refusals."
     )
 
     st.markdown("---")
-    st.subheader("💡 Example Queries")
-    sample_queries = [
-        "What is DPIIT Startup Recognition?",
-        "Can a Private Limited Company apply for DPIIT recognition?",
-        "Check eligibility: Pvt Ltd incorporated in 2024 with 2 crore turnover",
-        "Tell me about the Startup India Seed Fund Scheme",
-        "Please submit my application for startup registration",
-        "What are the benefits under Section 80-IAC?"
-    ]
-    for sq in sample_queries:
-        if st.button(sq, key=f"btn_{sq}", use_container_width=True):
-            st.session_state["queued_prompt"] = sq
+    st.markdown("### 💡 Recommended Inquiries")
+
+    example_categories = {
+        "🏛️ DPIIT Eligibility": [
+            "What is DPIIT Startup Recognition?",
+            "Can an LLP apply for DPIIT recognition?",
+            "How long is a company eligible to be recognized as a startup under DPIIT?"
+        ],
+        "💰 Funding & Schemes": [
+            "What is the Startup India Seed Fund Scheme?",
+            "What is the Fund of Funds for Startups?",
+            "What is the Credit Guarantee Scheme for Startups?"
+        ],
+        "⚖️ Tax & IPR Rebates": [
+            "What is the income tax exemption under Section 80-IAC?",
+            "What intellectual property benefits are available to eligible startups?"
+        ],
+        "📝 Mutating Action (Approval Gate)": [
+            "Please submit my application for startup registration: TechSetu Solutions Pvt Ltd"
+        ],
+        "🛡️ Safety & Refusal Test": [
+            "What are the lunar exploration subsidies offered by NASA to Indian startups?",
+            "Will the government give 5 crore cash unconditionally to any college student?"
+        ]
+    }
+
+    for cat_name, queries in example_categories.items():
+        with st.expander(cat_name, expanded=(cat_name == "🏛️ DPIIT Eligibility")):
+            for q in queries:
+                if st.button(q, key=f"btn_{hash(q)}", use_container_width=True):
+                    st.session_state["queued_prompt"] = q
 
     st.markdown("---")
     if st.button("🗑️ Clear Conversation", use_container_width=True):
@@ -233,27 +465,54 @@ with st.sidebar:
         st.session_state.feedback_submitted = set()
         st.rerun()
 
-# Main Header
-st.markdown('<div class="main-header">StartupSetu AI Platform</div>', unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div style="font-size: 0.78rem; color: #94A3B8; text-align: center; margin-top: 1.5rem;">
+            StartupSetu v2.1 · Gazette G.S.R. 127(E)<br/>
+            Engineered by Shrikar Bhorkade
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+# --------------------------------------------------
+# HERO BANNER
+# --------------------------------------------------
 st.markdown(
-    '<div class="sub-header">AI-Powered DPIIT Startup Recognition, Funding Schemes & Official Guidance for Indian Founders</div>',
+    """
+    <div class="hero-container">
+        <div class="hero-badge">
+            <span>🇮🇳</span> Official Indian Startup Advisory & Policy Engine
+        </div>
+        <div class="hero-title">StartupSetu AI Platform</div>
+        <div class="hero-subtitle">
+            Autonomous regulatory advisory, statutory eligibility evaluation under Gazette Notification G.S.R. 127(E),
+            and zero-hallucination policy guidance with verifiable citations for Indian entrepreneurs and founders.
+        </div>
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
-# Navigation Tabs: Signature 'Am I a startup?' Form & Chat Assistant
+
+# --------------------------------------------------
+# NAVIGATION TABS
+# --------------------------------------------------
 tab_form, tab_chat = st.tabs([
     "🚀 'Am I a startup?' Eligibility Form",
     "💬 AI Chat Assistant (/ask & /agent)"
 ])
 
+
 # --------------------------------------------------
 # TAB 1: 'Am I a startup?' ST.FORM
 # --------------------------------------------------
 with tab_form:
-    st.subheader("📋 'Am I a startup?' — Official DPIIT Recognition Evaluation")
+    st.markdown("### 📋 Official DPIIT Startup Recognition Evaluation")
     st.markdown(
-        "Evaluate your venture's eligibility for official Government of India DPIIT Startup Recognition, "
-        "tax exemptions under Section 80-IAC, patent rebates, and seed funding support."
+        "Evaluate your entity's compliance against the 4 statutory pillars defined by the **Ministry of Commerce and Industry** "
+        "(Gazette Notification G.S.R. 127(E)) for Section 80-IAC tax exemptions, patent rebates, and seed funding access."
     )
 
     with st.form("am_i_a_startup_form"):
@@ -268,14 +527,14 @@ with tab_form:
                     "Sole Proprietorship",
                     "One Person Company (OPC)"
                 ],
-                help="Under DPIIT rules, only Private Limited Company, LLP, or Registered Partnership firms qualify."
+                help="Under statutory rules, only Private Limited Company, LLP, or Registered Partnership firms qualify for recognition."
             )
             form_date = st.date_input(
                 "2. Incorporation Date",
-                value=datetime(2024, 1, 1),
+                value=datetime(2023, 6, 1),
                 min_value=datetime(2000, 1, 1),
                 max_value=datetime.now(),
-                help="Entity period of existence must not exceed 10 years from the date of incorporation."
+                help="The period of existence must not exceed 10 years from the date of incorporation."
             )
 
         with col2:
@@ -283,24 +542,24 @@ with tab_form:
                 "3. Annual Turnover (₹ in Crores)",
                 min_value=0.0,
                 max_value=1000.0,
-                value=1.5,
+                value=2.5,
                 step=0.5,
                 help="Turnover for any financial year since incorporation must not exceed ₹100 Crore."
             )
             form_innovative = st.checkbox(
-                "4. Working towards innovation, development or improvement of products/services, or scalable business model",
+                "4. Working towards innovation, development or improvement of products/services, or a scalable business model",
                 value=True,
-                help="Entity must be working towards innovation, development or improvement, or a scalable business model with high employment generation or wealth creation."
+                help="The entity must work towards innovation, development, or deployment of technology/processes or a scalable model with high employment potential."
             )
 
         submit_eligibility = st.form_submit_button(
-            "🔍 Evaluate Startup Eligibility",
+            "🔍 Evaluate Statutory Eligibility",
             use_container_width=True,
             type="primary"
         )
 
     if submit_eligibility:
-        with st.spinner("Evaluating against official DPIIT statutory criteria..."):
+        with st.spinner("Evaluating compliance against Gazette Notification G.S.R. 127(E)..."):
             result = call_check_eligibility(
                 api_url_str=api_url,
                 entity_type=form_entity,
@@ -313,6 +572,8 @@ with tab_form:
         criteria = result.get("criteria", {})
         years_active = result.get("years_active", 0)
 
+        st.markdown("---")
+
         # Verdict Header
         if is_eligible:
             st.success("🎉 **VERDICT: ELIGIBLE FOR OFFICIAL DPIIT STARTUP RECOGNITION**")
@@ -321,220 +582,249 @@ with tab_form:
             st.error("❌ **VERDICT: NOT CURRENTLY ELIGIBLE FOR DPIIT RECOGNITION**")
             st.markdown("**Reasons for Ineligibility:**")
             for reason in result.get("reasons", []):
-                st.markdown(f"- ⚠️ {reason}")
+                st.markdown(f"- ⚠️ **{reason}**")
 
-        # Metrics Breakdown
-        st.markdown("#### 📊 Evaluation Breakdown across 4 Statutory Pillars:")
+        # Metrics Breakdown across 4 pillars
+        st.markdown("#### 📊 Compliance Breakdown Across 4 Statutory Pillars:")
         m1, m2, m3, m4 = st.columns(4)
         with m1:
             st.metric(
-                label="Entity Type",
-                value="Valid" if criteria.get("entity_type_valid") else "Invalid",
-                delta="Private Ltd / LLP / Partnership" if criteria.get("entity_type_valid") else "Excluded"
+                label="Entity Type Pillar",
+                value="Qualified" if criteria.get("entity_type_valid") else "Disqualified",
+                delta="Pvt Ltd / LLP / Partnership" if criteria.get("entity_type_valid") else "Non-Compliant"
             )
         with m2:
             st.metric(
-                label="Age (≤ 10 Years)",
-                value="Valid" if criteria.get("age_under_10_years") else "Exceeded",
-                delta=f"{years_active} yrs active"
+                label="Age Pillar (≤ 10 Years)",
+                value="Compliant" if criteria.get("age_under_10_years") else "Exceeded",
+                delta=f"{years_active} years operational"
             )
         with m3:
             st.metric(
-                label="Turnover (≤ ₹100 Cr)",
-                value="Valid" if criteria.get("turnover_under_100cr") else "Exceeded",
-                delta=f"₹{form_turnover} Cr"
+                label="Turnover Pillar (≤ ₹100 Cr)",
+                value="Compliant" if criteria.get("turnover_under_100cr") else "Exceeded",
+                delta=f"₹{form_turnover} Cr reported"
             )
         with m4:
             st.metric(
-                label="Innovation / Scalability",
+                label="Innovation Pillar",
                 value="Satisfied" if criteria.get("innovative_scalable") else "Missing",
-                delta="Innovation Pillar" if criteria.get("innovative_scalable") else "Required"
+                delta="Innovative Model" if criteria.get("innovative_scalable") else "Required"
             )
 
-        # Cited DPIIT Rule
+        # Cited DPIIT Statutory Rule Box
         st.markdown("---")
-        st.subheader("📜 Cited DPIIT Statutory Rule")
         cited = result.get("cited_rule", {})
         rules_html = "".join(f"<li>{r}</li>" for r in cited.get("rules", []))
         st.markdown(
-            f"""<div class="rule-card">
-                <b>Statutory Authority:</b> {cited.get('notification', 'DPIIT, Ministry of Commerce and Industry')}<br/>
-                <b>Framework Title:</b> {cited.get('title', 'DPIIT Startup Recognition Definition')}<br/>
-                <b>Official Gazette Reference:</b> <a href="{cited.get('source_url')}" target="_blank">Access Official DPIIT Recognition Portal</a><br/><br/>
-                <b>Statutory Conditions under Gazette Notification G.S.R. 127(E):</b>
-                <ul style="margin-top: 0.4rem; padding-left: 1.2rem;">
+            f"""
+            <div class="rule-card">
+                <div style="font-size: 1.05rem; font-weight: 700; color: #1E3A8A; margin-bottom: 0.5rem;">
+                    📜 Statutory Authority & Citation Reference
+                </div>
+                <b>Regulatory Body:</b> {cited.get('notification', 'DPIIT, Ministry of Commerce and Industry')}<br/>
+                <b>Notification Framework:</b> {cited.get('title', 'DPIIT Startup Recognition Definition')}<br/>
+                <b>Gazette Reference:</b> Gazette Notification G.S.R. 127(E) &mdash;
+                <a href="{cited.get('source_url', 'https://www.startupindia.gov.in/')}" target="_blank">Access Official Startup India Portal</a><br/><br/>
+                <b>Statutory Conditions:</b>
+                <ul style="margin-top: 0.4rem; padding-left: 1.25rem;">
                     {rules_html}
                 </ul>
-            </div>""",
+            </div>
+            """,
             unsafe_allow_html=True
         )
 
         # Recommended Benefits
         benefits = result.get("recommended_benefits", [])
         if benefits:
-            st.markdown("#### 🎁 Government Benefits Available Upon DPIIT Recognition:")
-            for b in benefits:
-                st.markdown(f"- ✅ **{b}**")
+            st.markdown("#### 🎁 Statutory Benefits Unlocked Upon Recognition:")
+            b_cols = st.columns(2)
+            for idx, b in enumerate(benefits):
+                with b_cols[idx % 2]:
+                    st.markdown(f"- ✅ **{b}**")
 
 
 # --------------------------------------------------
 # TAB 2: AI CHAT ASSISTANT (/ask & /agent)
 # --------------------------------------------------
 with tab_chat:
-    st.subheader("💬 AI Chat Assistant")
-    st.markdown("Interact directly with the StartupSetu RAG knowledge base or autonomous LangGraph agent.")
+    active_engine_label = "LangGraph Autonomous Agent (/agent)" if "Agent" in endpoint_mode else "Direct RAG Knowledge Base (/ask)"
+    st.markdown(f"### 💬 Interactive Advisory Console &mdash; `{active_engine_label}`")
+    st.markdown(
+        "Ask questions regarding Indian startup registration, statutory exemptions, Seed Fund schemes, and policy definitions. "
+        "Every response is strictly grounded with verifiable government citations."
+    )
 
-    # Display Chat History
+    # Render Chat History
     for idx, msg in enumerate(st.session_state.messages):
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-            # Display citations if present
+            # Citations Display
             citations = msg.get("citations", [])
             if citations:
                 with st.expander(f"📚 Citations & Official Sources ({len(citations)})", expanded=False):
                     for c in citations:
-                        title = c.get("title", "Official Source")
-                        source = c.get("source", "#")
+                        title = c.get("title", "Official Government Gazette")
+                        source = c.get("source", "https://www.startupindia.gov.in/")
                         page = c.get("page", 1)
                         st.markdown(
-                            f"""<div class="citation-card">
-                            📄 <b>{title}</b> &mdash; Page {page}<br/>
-                            🔗 <a href="{source}" target="_blank">Access Official Documentation</a>
-                            </div>""",
+                            f"""
+                            <div class="citation-card">
+                                📄 <b>{title}</b> &mdash; Page {page}<br/>
+                                🔗 <a href="{source}" target="_blank">Access Official Government Document</a>
+                            </div>
+                            """,
                             unsafe_allow_html=True
                         )
 
-            # Thumbs up / down feedback widget
+            # Execution Engine & Telemetry Footer
+            engine_info = msg.get("engine")
+            metrics = msg.get("metrics")
+            if msg["role"] == "assistant" and (engine_info or metrics):
+                tag_parts = []
+                if engine_info:
+                    tag_parts.append(f"⚙️ {engine_info}")
+                if metrics and metrics.get("latency_ms"):
+                    tag_parts.append(f"⚡ {metrics['latency_ms']} ms")
+                if metrics and metrics.get("cached"):
+                    tag_parts.append("💾 Cached Hit")
+                if metrics and metrics.get("total_tokens"):
+                    tag_parts.append(f"📊 {metrics['total_tokens']} tokens")
+                if tag_parts:
+                    st.markdown(f'<div class="engine-tag">{" · ".join(tag_parts)}</div>', unsafe_allow_html=True)
+
+            # Thumbs Up / Down Feedback Widget
             if msg["role"] == "assistant":
                 fb_key = f"fb_{idx}"
-                col1, col2, col3 = st.columns([1, 1, 6])
-                with col1:
+                col_up, col_down, col_status = st.columns([1, 1, 6])
+                with col_up:
                     if st.button("👍 Helpful", key=f"up_{idx}", disabled=fb_key in st.session_state.feedback_submitted):
+                        q_text = st.session_state.messages[idx - 1]["content"] if idx > 0 else "N/A"
                         save_feedback(
-                            question=st.session_state.messages[idx - 1]["content"] if idx > 0 else "N/A",
+                            question=q_text,
                             answer=msg["content"],
                             rating="thumbs_up",
                             mode=endpoint_mode
                         )
                         st.session_state.feedback_submitted.add(fb_key)
-                        st.toast("Thank you for your feedback! 👍", icon="✅")
+                        st.toast("Thank you for your rating! 👍", icon="✅")
                         st.rerun()
-                with col2:
+                with col_down:
                     if st.button("👎 Poor", key=f"down_{idx}", disabled=fb_key in st.session_state.feedback_submitted):
+                        q_text = st.session_state.messages[idx - 1]["content"] if idx > 0 else "N/A"
                         save_feedback(
-                            question=st.session_state.messages[idx - 1]["content"] if idx > 0 else "N/A",
+                            question=q_text,
                             answer=msg["content"],
                             rating="thumbs_down",
                             mode=endpoint_mode
                         )
                         st.session_state.feedback_submitted.add(fb_key)
-                        st.toast("Feedback recorded! We'll improve this response. 👎", icon="📝")
+                        st.toast("Feedback recorded! 👎", icon="📝")
                         st.rerun()
-                with col3:
+                with col_status:
                     if fb_key in st.session_state.feedback_submitted:
-                        st.caption("✓ Feedback saved")
+                        st.caption("✓ Feedback recorded")
 
-    # Pending Approval Banner for Human-in-the-Loop
+    # Human-in-the-Loop Action Approval Card
     if st.session_state.pending_approval:
-        pending = st.session_state.pending_approval
-        st.warning("⚠️ **Human Approval Required**\nThe agent requires your confirmation before executing this action.")
+        st.markdown("---")
+        st.warning(
+            "⚠️ **Human-in-the-Loop Approval Required**\n\n"
+            "The autonomous agent has formulated a mutating action that requires explicit human confirmation before persisting to the official database."
+        )
         col_app, col_rej = st.columns(2)
         with col_app:
-            if st.button("✅ Approve Action", use_container_width=True, type="primary"):
+            if st.button("✅ Approve & Persist Action", use_container_width=True, type="primary"):
                 with st.spinner("Executing approved action..."):
-                    try:
-                        res = call_agent_api(
-                            api_url_str=api_url,
-                            query="Approved by user",
-                            thread_id=st.session_state.thread_id,
-                            approved=True
-                        )
-                        st.session_state.messages.append({
-                            "role": "assistant",
-                            "content": res.get("response", "Action completed."),
-                            "citations": res.get("citations", [])
-                        })
-                        st.session_state.pending_approval = None
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"Error executing approved action: {e}")
+                    res = call_agent_api(
+                        api_url_str=api_url,
+                        query="Approved by user",
+                        thread_id=st.session_state.thread_id,
+                        approved=True
+                    )
+                    st.session_state.messages.append({
+                        "role": "assistant",
+                        "content": res.get("response", "Action completed successfully."),
+                        "citations": res.get("citations", []),
+                        "engine": res.get("engine", "LangGraph Agent")
+                    })
+                    st.session_state.pending_approval = None
+                    st.rerun()
 
         with col_rej:
             if st.button("❌ Reject Action", use_container_width=True):
                 with st.spinner("Cancelling action..."):
-                    try:
-                        res = call_agent_api(
-                            api_url_str=api_url,
-                            query="Rejected by user",
-                            thread_id=st.session_state.thread_id,
-                            approved=False
-                        )
-                        st.session_state.messages.append({
-                            "role": "assistant",
-                            "content": res.get("response", "Action was cancelled."),
-                            "citations": []
-                        })
-                        st.session_state.pending_approval = None
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"Error rejecting action: {e}")
+                    res = call_agent_api(
+                        api_url_str=api_url,
+                        query="Rejected by user",
+                        thread_id=st.session_state.thread_id,
+                        approved=False
+                    )
+                    st.session_state.messages.append({
+                        "role": "assistant",
+                        "content": res.get("response", "Action was rejected and cancelled."),
+                        "citations": [],
+                        "engine": res.get("engine", "LangGraph Agent")
+                    })
+                    st.session_state.pending_approval = None
+                    st.rerun()
 
-    # Process Input Prompt
-    prompt_input = st.chat_input("Ask about DPIIT startup recognition, eligibility, or funding schemes...")
+    # Chat Input Processing
+    prompt_input = st.chat_input("Ask about DPIIT startup recognition, 80-IAC tax exemption, Seed Fund schemes...")
     queued = st.session_state.pop("queued_prompt", None)
     user_prompt = queued or prompt_input
 
     if user_prompt:
+        # Append User Message
         st.session_state.messages.append({"role": "user", "content": user_prompt})
         with st.chat_message("user"):
             st.markdown(user_prompt)
 
+        # Assistant Generation
         with st.chat_message("assistant"):
-            with st.spinner("Consulting official policies..."):
-                try:
-                    if "Direct RAG" in endpoint_mode:
-                        result = call_ask_api(api_url_str=api_url, question=user_prompt)
-                    else:
-                        result = call_agent_api(
-                            api_url_str=api_url,
-                            query=user_prompt,
-                            thread_id=st.session_state.thread_id
-                        )
-                        if result.get("thread_id"):
-                            st.session_state.thread_id = result["thread_id"]
+            with st.spinner("Analyzing verified government records..."):
+                if "Direct RAG" in endpoint_mode:
+                    result = call_ask_api(api_url_str=api_url, question=user_prompt)
+                else:
+                    result = call_agent_api(
+                        api_url_str=api_url,
+                        query=user_prompt,
+                        thread_id=st.session_state.thread_id
+                    )
+                    if result.get("thread_id"):
+                        st.session_state.thread_id = result["thread_id"]
 
-                    response_text = result.get("response", "")
-                    citations = result.get("citations", [])
+                response_text = result.get("response", "")
+                citations = result.get("citations", [])
+                metrics = result.get("metrics", {})
+                engine = result.get("engine", "StartupSetu Engine")
 
-                    st.markdown(response_text)
+                st.markdown(response_text)
 
-                    if citations:
-                        with st.expander(f"📚 Citations & Official Sources ({len(citations)})", expanded=True):
-                            for c in citations:
-                                st.markdown(
-                                    f"""<div class="citation-card">
-                                    📄 <b>{c.get('title')}</b> &mdash; Page {c.get('page', 1)}<br/>
-                                    🔗 <a href="{c.get('source', '#')}" target="_blank">Access Official Documentation</a>
-                                    </div>""",
-                                    unsafe_allow_html=True
-                                )
+                if citations:
+                    with st.expander(f"📚 Citations & Official Sources ({len(citations)})", expanded=True):
+                        for c in citations:
+                            st.markdown(
+                                f"""
+                                <div class="citation-card">
+                                    📄 <b>{c.get('title', 'Official Gazette')}</b> &mdash; Page {c.get('page', 1)}<br/>
+                                    🔗 <a href="{c.get('source', 'https://www.startupindia.gov.in/')}" target="_blank">Access Official Documentation</a>
+                                </div>
+                                """,
+                                unsafe_allow_html=True
+                            )
 
-                    st.session_state.messages.append({
-                        "role": "assistant",
-                        "content": response_text,
-                        "citations": citations
-                    })
+                # Append to messages
+                st.session_state.messages.append({
+                    "role": "assistant",
+                    "content": response_text,
+                    "citations": citations,
+                    "metrics": metrics,
+                    "engine": engine
+                })
 
-                    if result.get("status") == "needs_approval":
-                        st.session_state.pending_approval = result.get("pending_action")
-                        st.rerun()
-
-                except Exception as err:
-                    err_msg = f"Failed to fetch response: {err}"
-                    st.error(err_msg)
-                    st.session_state.messages.append({
-                        "role": "assistant",
-                        "content": err_msg,
-                        "citations": []
-                    })
+                if result.get("status") == "needs_approval":
+                    st.session_state.pending_approval = result.get("pending_action")
+                    st.rerun()
