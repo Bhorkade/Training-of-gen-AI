@@ -14,6 +14,79 @@ StartupSetu is an AI-powered platform that helps students and entrepreneurs unde
 - **Testing & Quality Assurance:** Pytest (25 Tests Passing), Ruff (Automated Code Quality)
 - **DevOps & Cloud Deployment:** Docker, Docker Compose, GitHub Actions CI, Render Cloud CD (`render.yaml`)
 
+## Project Directory Structure
+
+```text
+Training-of-gen-AI/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                 # Automated CI: Ruff linting & Pytest on push/PR
+├── analysis/
+│   └── explore.py                 # Pandas exploratory data analysis (Day 04)
+├── app/                           # Core backend application modules
+│   ├── agent_loop.py              # Hand-written ReAct loop (Reason-Act-Observe)
+│   ├── chunking.py                # Semantic chunking preserving title/page/source
+│   ├── cli.py                     # Command-line interface for records & search
+│   ├── embed.py                   # Lazy-loaded SentenceTransformer (all-MiniLM-L6-v2)
+│   ├── evaluate_search.py         # Semantic search evaluation generator
+│   ├── fetch.py                   # HTTP data fetcher with timeouts & retry logic
+│   ├── graph.py                   # LangGraph stateful agent with MemorySaver & HITL
+│   ├── ingest.py                  # Raw CSV cleaner & records.json converter
+│   ├── llm.py                     # Provider wrapper for Gemini LLM
+│   ├── main.py                    # FastAPI server: /health, /records, /search, /ask, /agent
+│   ├── models.py                  # Pydantic & DataClass schemas (Record)
+│   ├── rag.py                     # RAG pipeline with citations & 0.48 refusal threshold
+│   ├── records.py                 # Core records CRUD & filtering utilities
+│   ├── smart_search.py            # TF-IDF & cosine similarity keyword search
+│   ├── tools.py                   # Domain tools: DPIIT eligibility, schemes, application
+│   └── vectorstore.py             # ChromaDB persistent collection & vector indexing
+├── data/                          # Data persistence layer
+│   ├── raw/                       # Raw source data
+│   │   └── startupsetu_master.csv # Master Startup India records CSV
+│   ├── applications.json          # Submitted DPIIT applications (HITL approval)
+│   ├── feedback.json              # Thumbs up/down feedback ratings from UI
+│   ├── questions.json             # Saved user inquiries from POST /questions
+│   ├── records.json               # Cleaned JSON dataset loaded into vector store
+│   └── sample_records.py          # Sample record dictionary definitions (Day 02)
+├── docs/                          # Architecture & technical documentation
+│   ├── how_llms_work.md           # LLM concepts, neural networks & eval queries (Day 05)
+│   ├── interview.md               # Technical defense, 60s pitch & top 10 Q&A (Day 14)
+│   ├── resume.md                  # Engineering portfolio & resume achievements (Day 13)
+│   └── ui_chat_screen.png         # Streamlit UI screenshot for documentation
+├── eval/                          # Quantitative evaluations & benchmarks
+│   ├── eval_results.md            # Day 08 RAG evaluation results (Config 1 vs Config 2)
+│   ├── eval_set.json              # 15-question benchmark dataset with edge cases
+│   ├── prompt_compare.md          # Day 06 prompt engineering comparison
+│   ├── run_eval.py                # Automated RAG evaluation benchmark script
+│   └── search_results.md          # Day 07 semantic search relevance records
+├── prompts/                       # Externalized prompt templates
+│   ├── dpiit_recognition.txt      # Task prompt for DPIIT recognition queries
+│   ├── schemes_benefits.txt       # Task prompt for government scheme inquiries
+│   └── system.txt                 # Master system prompt with guardrail constraints
+├── tests/                         # Automated test suite (25 passing tests)
+│   ├── conftest.py                # Pytest fixtures & FastAPI TestClient setup
+│   ├── test_agent.py              # Tests for DPIIT eligibility, schemes & LangGraph HITL
+│   ├── test_health.py             # Tests for GET /health endpoint
+│   ├── test_rag.py                # Tests for /ask, caching, 500-char limit & prompt injection
+│   ├── test_records.py            # Tests for record retrieval, pagination & 404s
+│   └── test_search.py             # Tests for TF-IDF smart search & parameters
+├── ui/                            # Frontend interface
+│   └── app.py                     # Streamlit dual-mode chat & 4-pillar eligibility form
+├── .dockerignore                  # Docker build exclusion rules
+├── .env.example                   # Environment variable template
+├── .gitignore                     # Git tracking exclusions (.venv, chroma_db, .env)
+├── day01_intro.py                 # Day 01 introductory project card script
+├── day01_menu.py                  # Day 01 interactive console while-loop menu
+├── day02_tasks.py                 # Day 02 collection filtering & keyword search
+├── docker-compose.yml             # Multi-service container orchestration (API + UI)
+├── Dockerfile                     # Multi-stage production container image
+├── PROGRESS.md                    # Master progress tracker (Days 01–15 closed & verified)
+├── pyproject.toml                 # Ruff configuration & project metadata
+├── README.md                      # Comprehensive project documentation & benchmarks
+├── render.yaml                    # Render Cloud CD blueprint (512MB RAM optimized)
+└── requirements.txt               # Pinned Python package dependencies
+```
+
 
 
 ## Development Progress
@@ -181,6 +254,20 @@ RAG pipeline, API integration (`POST /ask`), and comparative evaluation complete
   - Streamlined Streamlit UI build to lightweight dependencies (`streamlit`, `requests`).
 - **Portfolio & Engineering Showcase:**
   - Published comprehensive engineering profile in `docs/resume.md` highlighting architecture, quantitative benchmarks, and resume bullet points.
+
+### Day 14 - Technical Interview Defense, Master Progress Tracker & Final Demo Sprint
+- **Interview Preparation & Technical Defense (`docs/interview.md`):**
+  - Formulated the 60-second elevator pitch, 3-minute technical pitch, and 10-minute deep dive.
+  - Authored comprehensive answers to the top 10 GenAI interview questions (RAG mechanics, `all-MiniLM-L6-v2` vs external APIs, 0.48 cosine thresholding, LangGraph HITL approval, Render 512MB RAM optimizations, prompt injection defenses).
+  - Included end-to-end RAG system design sequence diagram and Python/FastAPI viva drills.
+- **Master Progress Tracking (`PROGRESS.md`):**
+  - Closed and verified all tasks from Day 01 through Day 14.
+  - Documented evidence links, test pass status (25 tests passing), and demo day readiness.
+- **Clean Architecture & File Structuring:**
+  - Standardized the repository file layout with full directory mapping in `README.md`.
+  - Initialized `data/feedback.json` for persistence and finalized multi-service configurations.
+- **Tag Milestone:**
+  - Tagged `final` milestone for demo day readiness.
 
 ---
 
