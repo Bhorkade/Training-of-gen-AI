@@ -565,19 +565,7 @@ with st.sidebar:
             "Direct RAG Pipeline (/ask)"
         ],
         index=0,
-        help="LangGraph Agent handles multi-turn memory, statutory tools, and HITL approvals. Direct RAG focuses on verified citations and strict refusals."
-    )
-
-    st.markdown("---")
-
-    # Processing Engine Selector
-    endpoint_mode = st.radio(
-        "Select Processing Engine:",
-        options=[
-            "LangGraph Agent (/agent)",
-            "Direct RAG Pipeline (/ask)"
-        ],
-        index=0,
+        key="engine_mode_selector",
         help="LangGraph Agent handles multi-turn memory, statutory tools, and HITL approvals. Direct RAG focuses on verified citations and strict refusals."
     )
 
