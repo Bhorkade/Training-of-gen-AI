@@ -251,36 +251,45 @@ def check_api_health(api_url_str: str) -> bool:
         return False
 
 
+def resolve_api_url() -> str:
+    """Resolve the active FastAPI backend endpoint automatically."""
+    if ENV_API_URL:
+        return ENV_API_URL
+    if not IS_CLOUD_ENV and check_api_health(DEFAULT_LOCAL_URL):
+        return DEFAULT_LOCAL_URL
+    return DEFAULT_CLOUD_URL
+
+
 def call_ask_api(api_url_str: str, question: str) -> dict[str, Any]:
     """
-    Call the RAG endpoint POST /ask with automatic cloud fallback and in-process resilience.
+    Call the RAG endpoint POST /ask with automatic cloud fallback and resilience.
     Never crashes with an unhandled exception.
     """
     start_t = time.perf_counter()
 
     # 1. Try configured FastAPI endpoint if reachable
-    if api_url_str and not api_url_str.lower().startswith("direct"):
-        try:
-            r = requests.post(
-                f"{api_url_str.rstrip('/')}/ask",
-                json={"question": question, "top_k": 3},
-                timeout=35
-            )
-            if r.status_code == 200:
-                data = r.json()
-                latency = round((time.perf_counter() - start_t) * 1000, 2)
-                return {
-                    "response": data.get("answer", ""),
-                    "citations": data.get("citations", []),
-                    "metrics": data.get("metrics", {"latency_ms": latency}),
-                    "status": "completed",
-                    "requires_approval": False,
-                    "engine": f"FastAPI ({api_url_str})"
-                }
-        except Exception:
-            pass  # Seamless fallback to in-process or cloud fallback
+    target_url = api_url_str or DEFAULT_CLOUD_URL
+    try:
+        r = requests.post(
+            f"{target_url.rstrip('/')}/ask",
+            json={"question": question, "top_k": 3},
+            timeout=35
+        )
+        if r.status_code == 200:
+            data = r.json()
+            latency = round((time.perf_counter() - start_t) * 1000, 2)
+            return {
+                "response": data.get("answer", ""),
+                "citations": data.get("citations", []),
+                "metrics": data.get("metrics", {"latency_ms": latency}),
+                "status": "completed",
+                "requires_approval": False,
+                "engine": "FastAPI Web Service"
+            }
+    except Exception:
+        pass  # Fall through to fallback
 
-    # 2. Resilient In-Process Direct RAG Execution
+    # 2. Resilient In-Process Direct RAG Execution (when local dependencies exist)
     try:
         from app.rag import rag_answer
         data = rag_answer(question=question, top_k=3)
@@ -295,11 +304,11 @@ def call_ask_api(api_url_str: str, question: str) -> dict[str, Any]:
             },
             "status": "completed",
             "requires_approval": False,
-            "engine": "Direct In-Process RAG Engine"
+            "engine": "StartupSetu RAG Engine"
         }
-    except (ImportError, ModuleNotFoundError) as err:
-        # 3. If in-process packages are missing (e.g. lightweight UI container), attempt cloud fallback
-        if api_url_str != DEFAULT_CLOUD_URL:
+    except (ImportError, ModuleNotFoundError):
+        # 3. Retry cloud backend with extended timeout if different from target_url
+        if target_url != DEFAULT_CLOUD_URL:
             try:
                 r = requests.post(
                     f"{DEFAULT_CLOUD_URL.rstrip('/')}/ask",
@@ -315,21 +324,21 @@ def call_ask_api(api_url_str: str, question: str) -> dict[str, Any]:
                         "metrics": data.get("metrics", {"latency_ms": latency}),
                         "status": "completed",
                         "requires_approval": False,
-                        "engine": f"Cloud API Fallback ({DEFAULT_CLOUD_URL})"
+                        "engine": "FastAPI Cloud Service"
                     }
             except Exception:
                 pass
         return {
             "response": (
-                f"⚠️ **Backend Offline / Waking Up**: The backend API at `{api_url_str or DEFAULT_CLOUD_URL}` "
-                f"is currently waking up from sleep, and direct in-process engine is missing local dependencies ({err}). "
-                "Please allow ~30 seconds for the cloud server to spin up and click **'🔄 Test / Ping Connection'** in the sidebar."
+                "⚠️ **Regulatory Gateway Initializing**: The StartupSetu backend is waking up from idle mode "
+                "(free-tier instances sleep when inactive and take ~20-30 seconds to resume). "
+                "Please wait a moment and submit your inquiry again."
             ),
             "citations": [],
             "metrics": {"latency_ms": 0.0},
             "status": "error",
             "requires_approval": False,
-            "engine": "Resilience Safe Handler"
+            "engine": "Cloud Regulatory Gateway"
         }
 
 
@@ -344,27 +353,27 @@ def call_agent_api(
     Never throws an unhandled exception or module error.
     """
     # 1. Try FastAPI endpoint if reachable
-    if api_url_str and not api_url_str.lower().startswith("direct"):
-        try:
-            payload: dict[str, Any] = {"query": query}
-            if thread_id:
-                payload["thread_id"] = thread_id
-            if approved is not None:
-                payload["approved"] = approved
+    target_url = api_url_str or DEFAULT_CLOUD_URL
+    try:
+        payload: dict[str, Any] = {"query": query}
+        if thread_id:
+            payload["thread_id"] = thread_id
+        if approved is not None:
+            payload["approved"] = approved
 
-            r = requests.post(
-                f"{api_url_str.rstrip('/')}/agent",
-                json=payload,
-                timeout=40
-            )
-            if r.status_code == 200:
-                res = r.json()
-                res["engine"] = f"FastAPI ({api_url_str})"
-                return res
-        except Exception:
-            pass  # Seamless fallback
+        r = requests.post(
+            f"{target_url.rstrip('/')}/agent",
+            json=payload,
+            timeout=40
+        )
+        if r.status_code == 200:
+            res = r.json()
+            res["engine"] = "FastAPI LangGraph Service"
+            return res
+    except Exception:
+        pass  # Fall through to fallback
 
-    # 2. Resilient In-Process Direct LangGraph Execution
+    # 2. Resilient In-Process Direct LangGraph Execution (when local dependencies exist)
     try:
         from app.graph import run_graph_agent
         res = run_graph_agent(
@@ -372,11 +381,11 @@ def call_agent_api(
             thread_id=thread_id,
             approved=approved
         )
-        res["engine"] = "Direct In-Process LangGraph Engine"
+        res["engine"] = "StartupSetu Agent Engine"
         return res
-    except (ImportError, ModuleNotFoundError) as err:
-        # 3. If in-process packages are missing (e.g. lightweight UI container), attempt cloud fallback
-        if api_url_str != DEFAULT_CLOUD_URL:
+    except (ImportError, ModuleNotFoundError):
+        # 3. Retry cloud backend with extended timeout if different from target_url
+        if target_url != DEFAULT_CLOUD_URL:
             try:
                 payload = {"query": query}
                 if thread_id:
@@ -390,20 +399,20 @@ def call_agent_api(
                 )
                 if r.status_code == 200:
                     res = r.json()
-                    res["engine"] = f"Cloud API Fallback ({DEFAULT_CLOUD_URL})"
+                    res["engine"] = "FastAPI Cloud Service"
                     return res
             except Exception:
                 pass
         return {
             "response": (
-                f"⚠️ **Backend Offline / Waking Up**: The backend API at `{api_url_str or DEFAULT_CLOUD_URL}` "
-                f"is currently waking up from sleep, and direct in-process engine is missing local dependencies ({err}). "
-                "Please allow ~30 seconds for the cloud server to spin up and click **'🔄 Test / Ping Connection'** in the sidebar."
+                "⚠️ **Autonomous Agent Initializing**: The StartupSetu agent engine is waking up from idle mode "
+                "(free-tier instances sleep when inactive and take ~20-30 seconds to resume). "
+                "Please wait a moment and submit your inquiry again."
             ),
             "citations": [],
             "status": "error",
             "requires_approval": False,
-            "engine": "Resilience Safe Handler"
+            "engine": "Cloud Agent Gateway"
         }
 
 
@@ -521,67 +530,43 @@ if "feedback_submitted" not in st.session_state:
 # SIDEBAR CONFIGURATION
 # --------------------------------------------------
 with st.sidebar:
-    st.markdown("### ⚙️ System Control")
+    api_url = resolve_api_url()
+    is_online = check_api_health(api_url)
 
-    # Backend Connection Mode Selector
-    if IS_CLOUD_ENV:
-        profile_options = [
-            f"Live Cloud API ({DEFAULT_CLOUD_URL})",
-            "Localhost API (http://127.0.0.1:8000)",
-            "Direct Engine (Standalone / In-Process)",
-            "Custom URL"
-        ]
-        default_idx = 0
-    else:
-        profile_options = [
-            "Localhost API (http://127.0.0.1:8000)",
-            f"Live Cloud API ({DEFAULT_CLOUD_URL})",
-            "Direct Engine (Standalone / In-Process)",
-            "Custom URL"
-        ]
-        default_idx = 0
-
-    env_choice = st.selectbox(
-        "Connection Profile",
-        options=profile_options,
-        index=default_idx,
-        help="Select whether to use the live Cloud API, local FastAPI server, or embedded direct Python engine."
+    # Official Government Portal Badge
+    st.markdown(
+        f"""
+        <div style="background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%); padding: 1.1rem; border-radius: 12px; color: white; margin-bottom: 1.25rem; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.15);">
+            <div style="font-size: 0.72rem; font-weight: 700; color: #FCD34D; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.25rem;">
+                🇮🇳 DPIIT &middot; Startup India
+            </div>
+            <div style="font-size: 1.15rem; font-weight: 800; color: #FFFFFF; line-height: 1.25;">
+                StartupSetu Advisory
+            </div>
+            <div style="font-size: 0.78rem; color: #94A3B8; margin-top: 0.25rem;">
+                Gazette Notification G.S.R. 127(E)
+            </div>
+            <div style="margin-top: 0.75rem; padding-top: 0.6rem; border-top: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-size: 0.78rem; color: #E2E8F0;">System Status</span>
+                <span style="font-size: 0.78rem; font-weight: 700; color: {'#86EFAC' if is_online else '#FCD34D'}; display: inline-flex; align-items: center; gap: 0.35rem;">
+                    {'🟢 API Online' if is_online else '🟡 Live Cloud'}
+                </span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-    if env_choice.startswith("Live Cloud API"):
-        api_url = DEFAULT_CLOUD_URL
-        is_online = check_api_health(api_url)
-    elif env_choice.startswith("Localhost API"):
-        api_url = DEFAULT_LOCAL_URL
-        is_online = check_api_health(api_url)
-    elif env_choice == "Direct Engine (Standalone / In-Process)":
-        api_url = "direct"
-        is_online = False
-    else:
-        api_url = st.text_input("Custom API URL", value=DEFAULT_LOCAL_URL)
-        is_online = check_api_health(api_url)
-
-    # Status Display Badge
-    if api_url == "direct":
-        st.markdown(
-            '<div class="status-badge-standalone">⚡ Direct Python Engine (Local In-Process)</div>',
-            unsafe_allow_html=True
-        )
-    elif is_online:
-        st.markdown(
-            f'<div class="status-badge-online">🟢 API Connected: {api_url}</div>',
-            unsafe_allow_html=True
-        )
-    else:
-        st.markdown(
-            f'<div class="status-badge-offline">🟡 API Offline / Waking Up: {api_url}</div>',
-            unsafe_allow_html=True
-        )
-        st.caption("ℹ️ Cloud backends sleep after inactivity (~30s to wake up).")
-
-    if st.button("🔄 Test / Ping Connection", use_container_width=True, key="ping_btn"):
-        check_api_health.clear()
-        st.rerun()
+    # Processing Engine Selector
+    endpoint_mode = st.radio(
+        "Select Processing Engine:",
+        options=[
+            "LangGraph Agent (/agent)",
+            "Direct RAG Pipeline (/ask)"
+        ],
+        index=0,
+        help="LangGraph Agent handles multi-turn memory, statutory tools, and HITL approvals. Direct RAG focuses on verified citations and strict refusals."
+    )
 
     st.markdown("---")
 
@@ -630,6 +615,15 @@ with st.sidebar:
                     st.session_state["queued_prompt"] = q
 
     st.markdown("---")
+    with st.expander("🛠️ Advanced Settings", expanded=False):
+        custom_endpoint = st.text_input("Backend API Endpoint", value=api_url, help="Override backend URL if running on a custom port.")
+        if custom_endpoint and custom_endpoint.strip() != api_url:
+            api_url = custom_endpoint.strip()
+            is_online = check_api_health(api_url)
+        if st.button("🔄 Refresh / Wake Backend", use_container_width=True, key="refresh_backend_btn"):
+            check_api_health.clear()
+            st.rerun()
+
     if st.button("🗑️ Clear Conversation", use_container_width=True):
         st.session_state.messages = []
         st.session_state.thread_id = None
