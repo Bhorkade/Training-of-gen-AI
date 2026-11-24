@@ -117,9 +117,10 @@ def tfidf_chunk_search(query: str, top_k: int = 3) -> list[dict[str, Any]]:
         results = []
         for idx in top_indices:
             score = float(scores[idx])
-            if score > 0:
-                # Scale slightly so keyword matches align with min_score threshold
-                normalized_score = round(min(1.0, score * 1.25), 4)
+            if score >= 0.08:
+                # Map genuine matches (0.08 to 0.40) to dense vector range (0.55 to 0.98)
+                # ensuring relevant queries pass the min_score threshold (0.45)
+                normalized_score = round(min(0.98, 0.45 + (score * 1.3)), 4)
                 results.append({
                     "id": chunks[idx]["id"],
                     "text": chunks[idx]["text"],

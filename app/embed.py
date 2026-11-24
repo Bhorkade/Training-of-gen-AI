@@ -1,15 +1,20 @@
 import logging
 from typing import Any
 
-from sentence_transformers import SentenceTransformer
+try:
+    from sentence_transformers import SentenceTransformer
+except (ImportError, ModuleNotFoundError):
+    SentenceTransformer = None
 
 logger = logging.getLogger(__name__)
 
-_model: SentenceTransformer | None = None
+_model: Any = None
 
 
-def get_model() -> SentenceTransformer | None:
+def get_model() -> Any:
     global _model
+    if SentenceTransformer is None:
+        return None
     if _model is None:
         try:
             _model = SentenceTransformer("all-MiniLM-L6-v2", local_files_only=True)
