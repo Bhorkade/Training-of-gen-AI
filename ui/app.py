@@ -273,7 +273,7 @@ def call_ask_api(api_url_str: str, question: str) -> dict[str, Any]:
         r = requests.post(
             f"{target_url.rstrip('/')}/ask",
             json={"question": question, "top_k": 3},
-            timeout=35
+            timeout=55
         )
         if r.status_code == 200:
             data = r.json()
@@ -364,7 +364,7 @@ def call_agent_api(
         r = requests.post(
             f"{target_url.rstrip('/')}/agent",
             json=payload,
-            timeout=40
+            timeout=55
         )
         if r.status_code == 200:
             res = r.json()

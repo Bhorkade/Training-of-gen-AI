@@ -8,14 +8,18 @@ logger = logging.getLogger(__name__)
 _model: SentenceTransformer | None = None
 
 
-def get_model() -> SentenceTransformer:
+def get_model() -> SentenceTransformer | None:
     global _model
     if _model is None:
         try:
             _model = SentenceTransformer("all-MiniLM-L6-v2", local_files_only=True)
         except Exception:
-            logger.info("Local model cache not found. Loading 'all-MiniLM-L6-v2'...")
-            _model = SentenceTransformer("all-MiniLM-L6-v2", local_files_only=False)
+            try:
+                logger.info("Local model cache not found. Attempting to load 'all-MiniLM-L6-v2'...")
+                _model = SentenceTransformer("all-MiniLM-L6-v2", local_files_only=False)
+            except Exception as e:
+                logger.warning(f"Could not load SentenceTransformer ({e}). Fallback search will be used.")
+                return None
     return _model
 
 
@@ -27,6 +31,8 @@ def __getattr__(name: str) -> Any:
 
 def embed_texts(texts: list[str]) -> list[list[float]]:
     model = get_model()
+    if model is None:
+        return []
     embeddings = model.encode(
         texts,
         convert_to_numpy=True,
@@ -37,6 +43,8 @@ def embed_texts(texts: list[str]) -> list[list[float]]:
 
 def embed_query(query: str) -> list[float]:
     model = get_model()
+    if model is None:
+        return []
     embedding = model.encode(
         query,
         convert_to_numpy=True,
