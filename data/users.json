@@ -1,0 +1,26 @@
+[
+  {
+    "email": "founder@startupsetu.in",
+    "name": "Shrikar Bhorkade",
+    "password_hash": "fc110f7bccdf153e14574813e090955f0f65c2965f54bb81529b8d6744723611",
+    "role": "Startup Founder",
+    "entity_name": "TechSetu Innovations Pvt Ltd",
+    "created_at": "2026-11-25T10:00:00"
+  },
+  {
+    "email": "admin@dpiit.gov.in",
+    "name": "DPIIT Advisory Officer",
+    "password_hash": "091c7681937edba48c769eab7a1c4deb5c0d32fda9ee50d301c6b0f0bc0e7582",
+    "role": "DPIIT Officer / Admin",
+    "entity_name": "Ministry of Commerce and Industry",
+    "created_at": "2026-11-25T10:00:00"
+  },
+  {
+    "email": "student@sanjivani.edu.in",
+    "name": "Sanjivani Innovator",
+    "password_hash": "983d0154a13de64405f9fb6af9b59400b45a9c2a3073dad81e5d585a2d31c175",
+    "role": "Student Innovator",
+    "entity_name": "Sanjivani COE AI Research Lab",
+    "created_at": "2026-11-25T10:00:00"
+  }
+]
